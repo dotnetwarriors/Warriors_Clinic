@@ -1,0 +1,33 @@
+﻿@model List<Warriors_Clinic.Models.Chemist>
+ 
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+ 
+<h2>Chemists</h2>
+ 
+ 
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+ 
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Phone</td>
+                <td>
+                    <a asp-action="EditChemist" asp-route-id="@item.ChemistId" class="btn btn-warning btn-sm">Edit</a>
+                    <a asp-action="DeleteChemist" asp-route-id="@item.ChemistId" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+ 

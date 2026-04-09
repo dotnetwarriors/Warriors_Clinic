@@ -1,0 +1,47 @@
+﻿@model Warriors_Clinic.Models.Appointment
+ 
+@{
+    ViewData["Title"] = "Book Appointment";
+    Layout = "~/Views/Shared/_PatientLayout.cshtml";
+}
+ 
+<h2 class="text-center mt-4">Book Appointment</h2>
+ 
+<div class="container mt-4">
+    <form asp-action="Create" method="post">
+ 
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+ 
+        <div class="mb-3">
+            <label class="form-label">Select Doctor</label>
+            <select asp-for="PhysicianId" class="form-control" asp-items="ViewBag.PhysicianId"></select>
+        </div>
+ 
+        <div class="mb-3">
+            <label class="form-label">Appointment Date & Time</label>
+            <input asp-for="AppointmentDateTime" type="datetime-local" class="form-control" />
+        </div>
+ 
+        <div class="mb-3">
+            <label class="form-label">Reason</label>
+            <input asp-for="Reason" class="form-control" placeholder="Describe your issue" />
+        </div>
+ 
+        <div class="mb-3">
+            <label class="form-label">Criticality</label>
+            <select asp-for="Criticality" class="form-control">
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+            </select>
+        </div>
+ 
+        <div class="mb-3">
+            <label class="form-label">Note (Optional)</label>
+            <input asp-for="Note" class="form-control" />
+        </div>
+ 
+        <button type="submit" class="btn btn-primary w-100">Book Appointment</button>
+ 
+    </form>
+</div>

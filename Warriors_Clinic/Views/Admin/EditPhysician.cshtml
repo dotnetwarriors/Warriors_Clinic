@@ -1,0 +1,45 @@
+﻿@model Warriors_Clinic.Models.Physician
+ 
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+ 
+<h2>Edit Physician</h2>
+ 
+<form method="post">
+ 
+    <input type="hidden" asp-for="PhysicianId" />
+ 
+    <div class="mb-3">
+        <label>Name</label>
+        <input asp-for="Name" class="form-control" required />
+    </div>
+ 
+    <div class="mb-3">
+        <label>Email</label>
+        <input asp-for="Email" class="form-control" required />
+    </div>
+ 
+    <div class="mb-3">
+        <label>Phone</label>
+        <input asp-for="Phone" class="form-control" required />
+    </div>
+ 
+    <div class="mb-3">
+        <label>Address</label>
+        <input asp-for="Address" class="form-control" />
+    </div>
+ 
+    <div class="mb-3">
+        <label>Specialization</label>
+        <input asp-for="Specialization" class="form-control" />
+    </div>
+ 
+    <div class="mb-3">
+        <label>Summary</label>
+        <textarea asp-for="Summary" class="form-control"></textarea>
+    </div>
+ 
+    <button class="btn btn-warning w-100">Update</button>
+ 
+</form>

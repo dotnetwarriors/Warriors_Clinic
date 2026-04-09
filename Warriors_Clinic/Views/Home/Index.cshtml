@@ -1,0 +1,29 @@
+﻿@{
+    ViewData["Tittle"] = "Home Page";
+}
+<!-- HERO SECTION -->
+<div class="hero-section text-white d-flex align-items-center">
+    <div class="container text-center">
+        <h1 class="display-3 fw-bold">WELCOME TO WARRIORS CLINIC</h1>
+        <p class="lead">Your health is our priority</p>
+        <a class="btn btn-light btn-lg mt-3"
+               asp-controller="Account"
+               asp-action="Register">
+            Register
+        </a>
+ 
+        <a class="btn btn-light btn-lg mt-3"
+               asp-controller="Account"
+               asp-action="Login">
+            Login
+        </a>
+    </div>
+</div>
+
+
+<hr />
+
+<footer class="text-center mt-4">
+    <p>&copy; @DateTime.Now.Year Warriors Clinic. All rights reserved.</p>
+    <p>Providing trusted healthcare services for you and your family.</p>
+</footer>

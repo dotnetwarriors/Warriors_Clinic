@@ -1,0 +1,32 @@
+﻿@{
+    Layout = "~/Views/Shared/_PatientLayout.cshtml";
+}
+ 
+<div class="container mt-5">
+ 
+    <h2>Welcome, @ViewBag.Name 👋</h2>
+ 
+    <hr />
+ 
+    <div class="mt-4">
+ 
+        <a asp-controller="Appointment" asp-action="Create" class="btn btn-primary me-2">
+            📅 Book Appointment
+        </a>
+ 
+        <a asp-controller="Appointment" asp-action="MyAppointments" class="btn btn-success">
+            📋 My Appointments
+        </a>
+        <a asp-controller="Appointment" asp-action="ViewSchedule" class="btn btn-primary me-2">
+            📅 View Schedule
+        </a>
+        <a asp-controller="Appointment" asp-action="Create" class="btn btn-primary me-2">
+            📅 View Prescripton
+        </a>
+        <a asp-controller="Appointment" asp-action="Create" class="btn btn-primary me-2">
+            📅 Chat Box
+        </a>
+ 
+    </div>
+ 
+</div>

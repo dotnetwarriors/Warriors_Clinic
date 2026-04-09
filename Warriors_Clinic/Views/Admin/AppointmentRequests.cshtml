@@ -1,0 +1,98 @@
+﻿@model IEnumerable<Warriors_Clinic.Models.Appointment>
+ 
+@{
+    ViewData["Title"] = "Appointment Requests";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+ 
+<h2 class="mb-4">📋 Appointment Requests</h2>
+ 
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Patient</th>
+            <th>Doctor</th>
+            <th>Date & Time</th>
+            <th>Reason</th>
+            <th>Status</th>
+            <th style="width:300px;">Actions</th>
+        </tr>
+    </thead>
+ 
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <!-- ✅ Patient Name -->
+                <td>@item.Patient?.Name</td>
+ 
+                <!-- ✅ Doctor Name -->
+                <td>@item.Physician?.Name</td>
+ 
+                <!-- ✅ Date + Reschedule -->
+                <td>
+                    @if (item.ScheduleStatus == "Pending")
+                    {
+                        <form asp-action="Reschedule" method="post" style="display:flex; gap:5px;">
+                            <input type="hidden" name="id" value="@item.AppointmentId" />
+ 
+                            <input type="datetime-local"
+                                   name="newDate"
+                                   value="@(item.AppointmentDateTime.HasValue ? item.AppointmentDateTime.Value.ToString("yyyy-MM-ddTHH:mm"): "")"
+                                   class="form-control" />
+ 
+                            <button type="submit" class="btn btn-warning btn-sm">
+                                Update
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <span>@item.AppointmentDateTime</span>
+                    }
+                </td>
+ 
+                <!-- ✅ Reason -->
+                <td>@item.Reason</td>
+ 
+                <!-- ✅ Status Badge -->
+                <td>
+                    @if (item.ScheduleStatus == "Pending")
+                    {
+                        <span class="badge bg-warning text-dark">Pending</span>
+                    }
+                    else if (item.ScheduleStatus == "Approved")
+                    {
+                        <span class="badge bg-success">Approved</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Rejected</span>
+                    }
+                </td>
+ 
+                <!-- ✅ Actions -->
+                <td>
+                    @if (item.ScheduleStatus == "Pending")
+                    {
+                        <a asp-action="ApproveAppointment"
+                               asp-route-id="@item.AppointmentId"
+                               class="btn btn-success btn-sm">
+                            ✔ Approve
+                        </a>
+ 
+                        <a asp-action="RejectAppointment"
+                               asp-route-id="@item.AppointmentId"
+                               class="btn btn-danger btn-sm">
+                            ✖ Reject
+                        </a>
+                    }
+                    else
+                    {
+                        <span class="text-muted">No actions</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

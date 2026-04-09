@@ -1,0 +1,36 @@
+﻿@model IEnumerable<Warriors_Clinic.Models.User>
+ 
+@{
+    ViewData["Title"] = "Pending Users";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+}
+ 
+<h2 class="text-center mb-4">Pending User Approvals</h2>
+ 
+<table class="table table-bordered table-hover text-center">
+    <thead class="table-dark">
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+ 
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>@user.Email</td>
+                <td>
+                    <a asp-action="Approve"
+                           asp-route-id="@user.UserId"
+                           class="btn btn-success btn-sm">
+                        Approve
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,34 @@
+﻿@model List<Warriors_Clinic.Models.Physician>
+ 
+@{
+    ViewData["Title"] = "Physician List";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+ 
+<h2>👨‍⚕️ Physicians</h2>
+ 
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Specialization</th>
+            <th>Phone</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+ 
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Specialization</td>
+                <td>@item.Phone</td>
+                <td>
+                    <a asp-action="EditPhysician" asp-route-id="@item.PhysicianId" class="btn btn-warning btn-sm">Edit</a>
+                    <a asp-action="DeletePhysician" asp-route-id="@item.PhysicianId" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

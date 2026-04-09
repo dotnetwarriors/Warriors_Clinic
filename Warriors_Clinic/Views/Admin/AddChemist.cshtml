@@ -1,0 +1,20 @@
+﻿@model Warriors_Clinic.Models.Chemist
+ 
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+ 
+<h2>Add Chemist</h2>
+ 
+<form method="post">
+ 
+    <input asp-for="Name" class="form-control mb-2" placeholder="Name" />
+    <input asp-for="Email" class="form-control mb-2" placeholder="Email" />
+    <input asp-for="Phone" class="form-control mb-2" placeholder="Phone" />
+    <input asp-for="Address" class="form-control mb-2" placeholder="Address" />
+    <textarea asp-for="Summary" class="form-control mb-2" placeholder="Summary"></textarea>
+ 
+    <button class="btn btn-success w-100">Save Chemist</button>
+ 
+</form>
+ 

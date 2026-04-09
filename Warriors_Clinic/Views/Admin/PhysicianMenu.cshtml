@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Physician Management";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+ 
+<h2 class="mb-4">👨‍⚕️ Physician Management</h2>
+ 
+<div class="row">
+ 
+    <div class="col-md-6">
+        <a asp-action="AddPhysician" class="btn btn-primary w-100 p-3">
+            ➕ New Physician
+        </a>
+    </div>
+ 
+    <div class="col-md-6">
+        <a asp-action="PhysicianList" class="btn btn-dark w-100 p-3">
+            📋 Physician List
+        </a>
+    </div>
+ 
+</div>

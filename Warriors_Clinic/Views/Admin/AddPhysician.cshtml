@@ -1,0 +1,46 @@
+﻿@model Warriors_Clinic.Models.Physician
+ 
+@{
+    ViewData["Title"] = "Add Physician";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+ 
+<h2 class="mb-4">➕ Add New Physician</h2>
+ 
+<form method="post">
+ 
+    <div class="mb-3">
+        <label>Name</label>
+        <input asp-for="Name" class="form-control" required />
+    </div>
+ 
+    <div class="mb-3">
+        <label>Email</label>
+        <input asp-for="Email" class="form-control" required />
+    </div>
+ 
+    <div class="mb-3">
+        <label>Phone</label>
+        <input asp-for="Phone" class="form-control" required />
+    </div>
+ 
+    <div class="mb-3">
+        <label>Address</label>
+        <input asp-for="Address" class="form-control" />
+    </div>
+ 
+    <div class="mb-3">
+        <label>Specialization</label>
+        <input asp-for="Specialization" class="form-control" />
+    </div>
+ 
+    <div class="mb-3">
+        <label>Summary</label>
+        <textarea asp-for="Summary" class="form-control"></textarea>
+    </div>
+ 
+    <button type="submit" class="btn btn-success w-100">
+        Save Physician
+    </button>
+ 
+</form>

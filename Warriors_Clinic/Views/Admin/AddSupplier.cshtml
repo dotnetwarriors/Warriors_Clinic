@@ -1,0 +1,18 @@
+﻿@model Warriors_Clinic.Models.Supplier
+ 
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+ 
+<h2>Add Supplier</h2>
+ 
+<form method="post">
+ 
+    <input asp-for="Name" class="form-control mb-2" placeholder="Name" />
+    <input asp-for="Email" class="form-control mb-2" placeholder="Email" />
+    <input asp-for="Phone" class="form-control mb-2" placeholder="Phone" />
+    <input asp-for="Address" class="form-control mb-2" placeholder="Address" />
+ 
+    <button class="btn btn-success w-100">Save Supplier</button>
+ 
+</form>

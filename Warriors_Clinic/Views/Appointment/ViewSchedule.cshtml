@@ -1,0 +1,41 @@
+﻿@model List<Warriors_Clinic.Models.Appointment>
+
+@{
+    ViewData["Title"] = "ViewSchedule";
+    Layout = "~/Views/Shared/_PatientLayout.cshtml";
+}
+ 
+<h2>📅 My Schedule</h2>
+ 
+@if (!Model.Any())
+{
+    <p>No approved appointments yet.</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Doctor</th>
+                <th>Date & Time</th>
+                <th>Message</th>
+            </tr>
+        </thead>
+ 
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Physician?.Name</td>
+                    <td>@item.AppointmentDateTime</td>
+                    <td>
+                        ✅ Your appointment is scheduled on
+                        <b>@item.AppointmentDateTime</b>
+                        with <b>@item.Physician?.Name</b>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+

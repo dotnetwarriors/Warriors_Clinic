@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Workforce Management";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+ 
+<h2 class="mb-4">🏥 Workforce Management</h2>
+ 
+<div class="row g-3">
+
+    <div class="col-md-3">
+        <a asp-action="PhysicianMenu" class="btn btn-success w-100">Manage Physicians</a>
+    </div>
+ 
+    <div class="col-md-3">
+        <a asp-action="ChemistMenu" class="btn btn-warning w-100">Manage Chemists</a>
+    </div>
+ 
+    <div class="col-md-3">
+        <a asp-action="SupplierMenu" class="btn btn-danger w-100">Manage Suppliers</a>
+    </div>
+
+ 
+</div>
