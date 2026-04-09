@@ -1,0 +1,45 @@
+﻿@{
+    Layout = "~/Views/Shared/_PhysicianLayout.cshtml";
+}
+ 
+<h2 class="mb-4">Welcome Dr. @ViewBag.Name 👨‍⚕️</h2>
+ 
+<div class="row">
+ 
+    <!-- Appointments -->
+    <div class="col-md-3">
+        <div class="card text-white bg-primary shadow">
+            <div class="card-body text-center">
+                <a asp-controller="Physician" asp-action="Appointments" class="btn btn-light mt-2">View Appointments </a>
+            </div>
+        </div>
+    </div>
+ 
+    <!-- Prescriptions -->
+    <div class="col-md-3">
+        <div class="card text-white bg-success shadow">
+            <div class="card-body text-center">
+                <a asp-action="Physician" class="btn btn-light mt-2">Prescription</a>
+            </div>
+        </div>
+    </div>
+ 
+    <!-- Chat -->
+    <div class="col-md-3">
+        <div class="card text-white bg-warning shadow">
+            <div class="card-body text-center">
+                <a asp-action="Physician" class="btn btn-light">Chat Box</a>
+            </div>
+        </div>
+    </div>
+ 
+    <!-- Drug Requests -->
+    <div class="col-md-3">
+        <div class="card text-white bg-danger shadow">
+            <div class="card-body text-center">
+                 <a asp-action="Physician" class="btn btn-light">Drug Requests</a>
+            </div>
+        </div>
+    </div>
+ 
+</div>

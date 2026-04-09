@@ -66,7 +66,7 @@ namespace Warriors_Clinic.Controllers
             if (user != null)
             {
                 HttpContext.Session.SetString("UserName", user.UserName);
-                HttpContext.Session.SetString("Role", user.Role);
+                HttpContext.Session.SetString("UserRole", user.Role);
 
                 if (user.Role == "Admin")
                     return RedirectToAction("Dashboard", "Admin");
@@ -74,6 +74,18 @@ namespace Warriors_Clinic.Controllers
 
                 if (user.Role == "Patient")
                     return RedirectToAction("Dashboard", "Patient");
+
+
+                if (user.Role == "Physician")
+                    return RedirectToAction("Dashboard", "Physician");
+
+
+                if (user.Role == "Chemist")
+                    return RedirectToAction("Dashboard", "Chemist");
+
+
+                if (user.Role == "Supplier")
+                    return RedirectToAction("Dashboard", "Supplier");
 
 
                 return RedirectToAction("Index", "Home");

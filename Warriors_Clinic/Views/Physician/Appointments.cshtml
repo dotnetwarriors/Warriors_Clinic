@@ -1,0 +1,52 @@
+﻿@model IEnumerable<Warriors_Clinic.Models.Appointment>
+ 
+@{
+    ViewData["Title"] = "Appointments";
+    Layout = "~/Views/Shared/_PhysicianLayout.cshtml";
+}
+ 
+<h2 class="mb-4">👨‍⚕️ Approved Appointments</h2>
+ 
+<table class="table table-bordered table-hover shadow">
+    <thead class="table-dark">
+        <tr>
+            <th>Patient Name</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>Date & Time</th>
+            <th>Reason</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+ 
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <!-- ✅ Patient Info -->
+                <td>@item.Patient?.Name</td>
+                <td>@item.Patient?.Phone</td>
+                <td>@item.Patient?.Address</td>
+ 
+                <!-- Appointment Info -->
+                <td>@item.AppointmentDateTime</td>
+                <td>@item.Reason</td>
+ 
+                <!-- Status -->
+                <td>
+                    <span class="badge bg-success">Approved</span>
+                </td>
+ 
+                <!-- Action -->
+                <td>
+                    <a asp-action="MarkConsulted"
+                           asp-route-id="@item.AppointmentId"
+                           class="btn btn-success btn-sm">
+                        ✔ Consulted
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Physician Panel</title>
+ 
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+ 
+    <style>
+            body {
+                background-color: #f5f7fa;
+            }
+            .navbar {
+                background-color: #0d6efd;
+            }
+            .navbar-brand, .nav-link, .navbar-text {
+                color: white !important;
+            }
+            footer {
+                background-color: #212529;
+                color: white;
+                text-align: center;
+                padding: 10px;
+                margin-top: 30px;
+            }
+    </style>
+</head>
+ 
+<body>
+ 
+    <!-- 🔵 HEADER / NAVBAR -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+ 
+            <!-- Logo -->
+            <a class="navbar-brand fw-bold" href="#">🏥 Warriors Clinic</a>
+ 
+            <!-- Menu -->
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav me-auto">
+ 
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Physician" asp-action="Dashboard">Dashboard</a>
+                    </li>
+ 
+                    <li class="nav-item">
+                        <a class="nav-link" href="ClinicInfo">About Clinic</a>
+                    </li>
+ 
+                    <li class="nav-item">
+                        <a class="nav-link" href="Drug">Drugs Info</a>
+                    </li>
+ 
+                </ul>
+ 
+                <!-- User Info -->
+                <span class="navbar-text me-3">
+                    👤 @Context.Session.GetString("UserName")
+                </span>
+ 
+                <!-- Logout -->
+                <a asp-controller="Account" asp-action="Logout" class="btn btn-danger btn-sm">
+                    Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+ 
+    <!-- 🔷 BODY -->
+    <div class="container mt-4">
+        @RenderBody()
+    </div>
+ 
+    <!-- ⚫ FOOTER -->
+    <footer>
+        © 2026 Warriors Clinic | Physician Panel
+    </footer>
+ 
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+ 
+</body>
+</html>
