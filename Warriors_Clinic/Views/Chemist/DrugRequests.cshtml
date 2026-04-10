@@ -1,0 +1,69 @@
+﻿@model List<Warriors_Clinic.Models.DrugRequest>
+
+@{
+    Layout = "~/Views/Shared/_ChemistLayout.cshtml";
+}
+
+<div class="card shadow">
+    <div class="card-header bg-success text-white">
+        <h4 class="mb-0">Drug Requests</h4>
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-hover table-bordered align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Physician</th>
+                    <th>Request</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @if (Model != null && Model.Count > 0)
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <strong>@item.Physician?.Name</strong>
+                            </td>
+
+                            <td>
+                                @item.DrugInfoText
+                            </td>
+
+                            <td>
+                                @item.RequestDate?.ToString("dd MMM yyyy")
+                            </td>
+
+                            <td>
+                                @{
+                                    var status = item.RequestStatus ?? "Pending";
+                                }
+
+                                <span class="badge
+                                    @(status == "Approved" ? "bg-success" :
+                                                                            status == "Rejected" ? "bg-danger" :
+                                                                            "bg-warning text-dark")">
+                                    @status
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4" class="text-center text-danger fw-bold">
+                            No drug requests available
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>

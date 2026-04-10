@@ -1,0 +1,63 @@
+﻿@{
+    Layout = "~/Views/Shared/_ChemistLayout.cshtml";
+    var suppliers = ViewBag.Suppliers;
+    var drugs = ViewBag.Drugs;
+}
+
+<h2 class="mb-4">🧾 Create Purchase Order</h2>
+
+<form method="post">
+
+    <!-- Supplier -->
+    <div class="mb-3">
+        <label class="form-label">Select Supplier</label>
+        <select name="supplierId" class="form-select" required>
+            <option value="">-- Select Supplier --</option>
+            @foreach (var s in suppliers)
+            {
+                <option value="@s.SupplierId">@s.Name</option>
+            }
+        </select>
+    </div>
+
+    <!-- Drug Table -->
+    <div class="card shadow">
+        <div class="card-header bg-warning">
+            <h5 class="mb-0">Select Drugs & Quantity</h5>
+        </div>
+
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Drug</th>
+                        <th>Quantity</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var d in drugs)
+                    {
+                        <tr>
+                            <td>
+                                @d.Tittle
+                                <input type="hidden" name="drugIds" value="@d.DrugId" />
+                            </td>
+
+                            <td>
+                                <input type="number" name="quantities" class="form-control" min="0" value="0" />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <br />
+
+    <button type="submit" class="btn btn-success">
+        Submit Purchase Order
+    </button>
+
+</form>

@@ -1,47 +1,47 @@
 ﻿@model IEnumerable<Warriors_Clinic.Models.Drug>
 
 @{
-    ViewData["Tittle"] = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_ChemistLayout.cshtml";
 }
 
-<h1>DRUGS INFORMATION</h1>
+<div class="card shadow-lg">
 
+    <div class="card-header bg-primary text-white d-flex justify-content-between">
+        <h4 class="mb-0">💊 Drug Management</h4>
+        <a href="/Drug/Create" class="btn btn-light">+ Add Drug</a>
+    </div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Tittle)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Expiry)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Dosage)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Tittle)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Expiry)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Dosage)
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <div class="card-body">
+
+        <table class="table table-hover align-middle text-center">
+            <thead class="table-light">
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Expiry</th>
+                    <th>Dosage</th>
+                    <th style="width:200px;">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Tittle</td>
+                        <td>@item.Description</td>
+                        <td>@item.Expiry</td>
+                        <td>@item.Dosage</td>
+
+                        <td>
+                            <a href="/Drug/Edit/@item.DrugId" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="/Drug/Details/@item.DrugId" class="btn btn-sm btn-info">View</a>
+                            <a href="/Drug/Delete/@item.DrugId" class="btn btn-sm btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>

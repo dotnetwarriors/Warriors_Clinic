@@ -1,8 +1,40 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Dashboard";
     Layout = "~/Views/Shared/_ChemistLayout.cshtml";
 }
 
-<h1>Dashboard</h1>
+<div class="text-center mb-5">
+    <h2 class="fw-bold">Chemist Dashboard</h2>
+    <p class="text-muted">Manage drugs, requests and purchase orders efficiently</p>
+</div>
 
+<div class="row g-4">
+
+    <!-- Drug Requests -->
+    <div class="col-md-4">
+        <div class="card shadow card-hover text-center p-4">
+            <h4 class="mb-3">💊 Drug Requests</h4>
+            <p>View requests from physicians</p>
+            <a href="/Chemist/DrugRequests" class="btn btn-primary">View Requests</a>
+        </div>
+    </div>
+
+    <!-- Manage Drugs -->
+    <div class="col-md-4">
+        <div class="card shadow card-hover text-center p-4">
+            <h4 class="mb-3">📦 Manage Drugs</h4>
+            <p>Add, edit, and delete drugs</p>
+            <a href="/Drug" class="btn btn-success">Manage Drugs</a>
+        </div>
+    </div>
+
+    <!-- Purchase Order -->
+    <div class="col-md-4">
+        <div class="card shadow card-hover text-center p-4">
+            <h4 class="mb-3">🧾 Purchase Order</h4>
+            <p>Create orders for suppliers</p>
+            <a href="/Chemist/CreatePO" class="btn btn-warning">Create PO</a>
+        </div>
+    </div>
+
+</div>
