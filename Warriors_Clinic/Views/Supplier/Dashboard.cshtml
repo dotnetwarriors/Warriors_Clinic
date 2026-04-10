@@ -1,0 +1,62 @@
+﻿@{
+    Layout = "~/Views/Shared/_SupplierLayout.cshtml";
+}
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">📊 Supplier Dashboard</h2>
+
+    <!-- 🔷 CARDS -->
+    <div class="row text-center">
+
+        <div class="col-md-3 mb-3">
+            <div class="card shadow border-0 bg-primary text-white">
+                <div class="card-body">
+                    <h5>Total Orders</h5>
+                    <h2>@ViewBag.TotalPO</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card shadow border-0 bg-warning text-dark">
+                <div class="card-body">
+                    <h5>Pending</h5>
+                    <h2>@ViewBag.Pending</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card shadow border-0 bg-success text-white">
+                <div class="card-body">
+                    <h5>Approved</h5>
+                    <h2>@ViewBag.Approved</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card shadow border-0 bg-danger text-white">
+                <div class="card-body">
+                    <h5>Rejected</h5>
+                    <h2>@ViewBag.Rejected</h2>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 🔷 ACTION SECTION -->
+    <div class="card shadow mt-4">
+        <div class="card-body text-center">
+            <h4>Manage Purchase Orders</h4>
+            <p>View and respond to purchase requests from chemist</p>
+
+            <a href="/Supplier/ViewPO" class="btn btn-primary btn-lg">
+                📦 View Purchase Orders
+            </a>
+        </div>
+    </div>
+
+</div>

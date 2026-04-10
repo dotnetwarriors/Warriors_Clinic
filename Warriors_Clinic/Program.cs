@@ -20,7 +20,7 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
 }
 app.UseRouting();
-
+app.UseStaticFiles();
 app.UseAuthorization();
 
 app.UseSession();

@@ -18,6 +18,10 @@ public partial class PurchaseOrderHeader
 
     public int? SupplierId { get; set; }
 
+    [StringLength(50)]
+    [Unicode(false)]
+    public string? Status { get; set; }  
+
     [InverseProperty("Po")]
     public virtual ICollection<PurchaseOrderLine> PurchaseOrderLines { get; set; } = new List<PurchaseOrderLine>();
 

@@ -1,0 +1,59 @@
+﻿@model List<Warriors_Clinic.Models.PurchaseOrderHeader>
+
+@{
+    Layout = "~/Views/Shared/_SupplierLayout.cshtml";
+}
+
+<h2 class="mb-4">📦 Purchase Orders</h2>
+
+@foreach (var po in Model)
+{
+    <div class="card shadow mb-4">
+
+        <div class="card-header bg-dark text-white d-flex justify-content-between">
+            <span>
+                PO ID: @po.Poid | Supplier: @po.Supplier?.Name
+            </span>
+
+            <span class="badge
+                @(po.Status == "Approved" ? "bg-success" :
+                                    po.Status == "Rejected" ? "bg-danger" :
+                                    "bg-warning text-dark")">
+                @(po.Status ?? "Pending")
+            </span>
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-bordered">
+                <thead class="table-light">
+                    <tr>
+                        <th>Drug</th>
+                        <th>Quantity</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var line in po.PurchaseOrderLines)
+                    {
+                        <tr>
+                            <td>@line.Drug?.Tittle</td>
+                            <td>@line.Quantity</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            @if (po.Status == "Pending")
+            {
+                <a href="/Supplier/ApprovePO/@po.Poid" class="btn btn-success">✔ Accept</a>
+                <a href="/Supplier/RejectPO/@po.Poid" class="btn btn-danger">✖ Reject</a>
+            }
+            else
+            {
+                <span class="text-muted">No Action Needed</span>
+            }
+
+        </div>
+    </div>
+}

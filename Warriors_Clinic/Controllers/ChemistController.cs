@@ -44,7 +44,8 @@ namespace Warriors_Clinic.Controllers
             var header = new PurchaseOrderHeader
             {
                 Podate = DateTime.Now,
-                SupplierId = supplierId
+                SupplierId = supplierId,
+                Status = "Pending"
             };
 
             _context.PurchaseOrderHeaders.Add(header);
