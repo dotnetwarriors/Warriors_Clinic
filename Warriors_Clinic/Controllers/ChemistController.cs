@@ -23,12 +23,51 @@ namespace Warriors_Clinic.Controllers
         public IActionResult DrugRequests()
         {
             var requests = _context.DrugRequests
-                .Include(d => d.Physician)
+                .Include(r => r.Physician)
                 .ToList();
 
             return View(requests);
         }
+        public IActionResult UpdateStatus(int id, string status)
+        {
+            var request = _context.DrugRequests.Find(id);
 
+            if (request != null)
+            {
+                request.RequestStatus = status;
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("DrugRequests");
+        }
+        // ✅ APPROVE REQUEST
+        public IActionResult ApproveRequest(int id)
+        {
+            var request = _context.DrugRequests.Find(id);
+
+            if (request != null)
+            {
+                request.RequestStatus = "Approved";
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("DrugRequests");
+        }
+
+
+        // ❌ REJECT REQUEST
+        public IActionResult RejectRequest(int id)
+        {
+            var request = _context.DrugRequests.Find(id);
+
+            if (request != null)
+            {
+                request.RequestStatus = "Rejected";
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("DrugRequests");
+        }
         public IActionResult CreatePO()
         {
             ViewBag.Suppliers = _context.Suppliers.ToList();
