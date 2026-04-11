@@ -1,0 +1,48 @@
+﻿@model List<Warriors_Clinic.Models.PhysicianAdvice>
+ 
+@{
+    Layout = "~/Views/Shared/_PatientLayout.cshtml";
+}
+ 
+<h2>My Prescriptions</h2>
+ 
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Advice</th>
+            <th>Drug</th>
+            <th>Dosage</th>
+            <th>Timing</th>
+            <th>Duration</th>
+        </tr>
+    </thead>
+ 
+    <tbody>
+        @foreach (var advice in Model)
+        {
+            var prescriptions = advice.PhysicianPrescriptions?.ToList();
+ 
+            if (prescriptions != null && prescriptions.Count > 0)
+            {
+                for (int i = 0; i < prescriptions.Count; i++)
+                {
+                    <tr>
+                        @* Show advice only once *@
+                        @if (i == 0)
+                        {
+                            <td rowspan="@prescriptions.Count">
+                                @advice.Advice
+                            </td>
+                        }
+ 
+                        <td>@prescriptions[i].Drug?.Tittle</td>
+                        <td>@prescriptions[i].Dosage</td>
+                        <td>@prescriptions[i].Timing</td>
+                        <td>@prescriptions[i].Duration</td>
+                    </tr>
+                }
+            }
+        }
+    </tbody>
+ 
+</table>

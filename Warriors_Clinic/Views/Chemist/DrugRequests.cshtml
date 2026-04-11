@@ -18,6 +18,7 @@
                     <th>Request</th>
                     <th>Date</th>
                     <th>Status</th>
+                    <th>Action</th>
                 </tr>
             </thead>
 
@@ -27,29 +28,20 @@
                     foreach (var item in Model)
                     {
                         <tr>
+                            <td><strong>@item.Physician?.Name</strong></td>
+                            <td>@item.DrugInfoText</td>
+                            <td>@item.RequestDate?.ToString("dd MMM yyyy")</td>
+                            <td>@item.RequestStatus</td>
                             <td>
-                                <strong>@item.Physician?.Name</strong>
-                            </td>
-
-                            <td>
-                                @item.DrugInfoText
-                            </td>
-
-                            <td>
-                                @item.RequestDate?.ToString("dd MMM yyyy")
-                            </td>
-
-                            <td>
-                                @{
-                                    var status = item.RequestStatus ?? "Pending";
+                                @if (item.RequestStatus == "Pending")
+                                {
+                                    <a asp-action="ApproveRequest" asp-route-id="@item.DrugRequestId" class="btn btn-success btn-sm">Accept</a>
+                                    <a asp-action="RejectRequest" asp-route-id="@item.DrugRequestId" class="btn btn-danger btn-sm">Reject</a>
                                 }
-
-                                <span class="badge
-                                    @(status == "Approved" ? "bg-success" :
-                                                                            status == "Rejected" ? "bg-danger" :
-                                                                            "bg-warning text-dark")">
-                                    @status
-                                </span>
+                                else
+                                {
+                                    <span class="badge bg-success">@item.RequestStatus</span>
+                                }
                             </td>
                         </tr>
                     }
@@ -57,11 +49,12 @@
                 else
                 {
                     <tr>
-                        <td colspan="4" class="text-center text-danger fw-bold">
+                        <td colspan="5" class="text-center text-danger fw-bold">
                             No drug requests available
                         </td>
                     </tr>
                 }
+ 
             </tbody>
         </table>
 

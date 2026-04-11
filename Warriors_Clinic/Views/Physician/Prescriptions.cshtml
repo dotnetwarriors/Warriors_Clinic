@@ -1,8 +1,54 @@
-﻿
+﻿@model IEnumerable<Warriors_Clinic.Models.Schedule>
+ 
 @{
     ViewData["Title"] = "Prescriptions";
-    Layout = "~/Views/Shared/_SupplierLayout.cshtml";
+    Layout = "~/Views/Shared/_PhysicianLayout.cshtml";
 }
-
-<h1>Prescriptions</h1>
-
+ 
+<h2 class="mb-4">💊 Prescriptions</h2>
+ 
+<table class="table table-bordered table-hover shadow">
+    <thead class="table-dark">
+        <tr>
+            <th>PatientId</th>
+            <th>Patient Name</th>
+            <th>AppointmentId</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>Date & Time</th>
+            <th>Reason</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+ 
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Appointment.Patient.PatientId</td>
+                <td>@item.Appointment.Patient.Name</td>
+                <td>@item.Appointment.AppointmentId</td>
+                <td>@item.Appointment.Patient.Phone</td>
+                <td>@item.Appointment.Patient.Address</td>
+ 
+                <td>@item.Appointment.AppointmentDateTime</td>
+                <td>@item.Appointment.Reason</td>
+ 
+                <td>
+                    <span class="badge bg-success">Consulted</span>
+                </td>
+ 
+                <td>
+                    <a asp-action="AddPrescription"
+                           asp-route-id="@item.ScheduleId"
+                           class="btn btn-primary btn-sm">
+                        Add Prescription
+                    </a>
+                 
+                   
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

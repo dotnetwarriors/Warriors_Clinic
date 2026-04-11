@@ -24,6 +24,8 @@ public partial class DrugRequest
     [Unicode(false)]
     public string? RequestStatus { get; set; }
 
+    public bool IsDeletedByPhysician { get; set; } = false;
+
     [ForeignKey("PhysicianId")]
     [InverseProperty("DrugRequests")]
     public virtual Physician? Physician { get; set; }

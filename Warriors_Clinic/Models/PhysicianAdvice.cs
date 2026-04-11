@@ -12,15 +12,17 @@ public partial class PhysicianAdvice
     [Key]
     public int PhysicianAdviceId { get; set; }
 
-    public int? ScheduleId { get; set; }
-
+   
     [Column(TypeName = "text")]
-    public string? Advice { get; set; }
+    public string Advice { get; set; }
+
+    
+    public int PatientId {  get; set; }
+
+
 
     [InverseProperty("PhysicianAdvice")]
     public virtual ICollection<PhysicianPrescription> PhysicianPrescriptions { get; set; } = new List<PhysicianPrescription>();
 
-    [ForeignKey("ScheduleId")]
-    [InverseProperty("PhysicianAdvices")]
-    public virtual Schedule? Schedule { get; set; }
+ 
 }

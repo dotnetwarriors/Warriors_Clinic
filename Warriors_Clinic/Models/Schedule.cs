@@ -25,6 +25,6 @@ public partial class Schedule
     [InverseProperty("Schedules")]
     public virtual Appointment? Appointment { get; set; }
 
-    [InverseProperty("Schedule")]
-    public virtual ICollection<PhysicianAdvice> PhysicianAdvices { get; set; } = new List<PhysicianAdvice>();
+    public bool IsSent { get; set; } = false;
+
 }

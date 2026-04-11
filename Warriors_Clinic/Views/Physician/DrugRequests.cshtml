@@ -1,8 +1,110 @@
-﻿
+﻿@model List<Warriors_Clinic.Models.DrugRequest>
+ 
 @{
-    ViewData["Title"] = "DrugRequests";
-    Layout = "~/Views/Shared/_SupplierLayout.cshtml";
+    Layout = "~/Views/Shared/_PhysicianLayout.cshtml";
 }
 
-<h1>DrugRequests</h1>
-
+<h2 class="mb-3">Drug Request</h2>
+ 
+<!-- ✅ BUTTON -->
+<button class="btn btn-primary mb-3" onclick="toggleForm()">
+    + New Request
+</button>
+ 
+<!-- ✅ TABLE -->
+<table class="table table-bordered table-hover">
+    <thead class="table-light">
+        <tr>
+            <th>Drug</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+ 
+    <tbody>
+        @if (Model != null && Model.Count > 0)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.DrugInfoText</td>
+ 
+                    <td>
+                        @item.RequestDate?.ToString("dd-MM-yyyy HH:mm")
+                    </td>
+ 
+                    <td>
+                        @if (item.RequestStatus == "Approved")
+                        {
+                            <span class="badge bg-success">Approved</span>
+                        }
+                        else if (item.RequestStatus == "Rejected")
+                        {
+                            <span class="badge bg-danger">Rejected</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning text-dark">Pending</span>
+                        }
+                    </td>
+ 
+                    <td>
+                        @if (item.RequestStatus == "Approved")
+                        {
+                            <a asp-action="DeleteRequest"
+                                   asp-route-id="@item.DrugRequestId"
+                                   class="btn btn-danger btn-sm">
+                                Delete
+                            </a>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="4" class="text-center text-danger fw-bold">
+                    No drug requests available
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+ 
+<!-- ✅ HIDDEN FORM (BELOW TABLE) -->
+<div id="requestForm" style="display:none; margin-top:20px;">
+    <div class="card p-3 shadow-sm">
+        <h5>New Drug Request</h5>
+ 
+        <form asp-action="CreateDrugRequest" method="post">
+ 
+            <div class="form-group">
+                <label>Drug Details</label>
+                <input type="text"
+                       name="DrugInfoText"
+                       class="form-control"
+                       placeholder="Enter drug name (e.g., Dolo650)"
+                       required />
+            </div>
+ 
+            <br />
+ 
+            <button type="submit" class="btn btn-success">Submit</button>
+        </form>
+    </div>
+</div>
+ 
+<!-- ✅ SCRIPT -->
+<script>
+    function toggleForm() {
+        var form = document.getElementById("requestForm");
+ 
+        if (form.style.display === "none") {
+            form.style.display = "block";
+        } else {
+            form.style.display = "none";
+        }
+    }
+</script>

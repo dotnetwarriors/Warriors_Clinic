@@ -37,7 +37,7 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<PurchaseOrderLine> PurchaseOrderLines { get; set; }
 
-    public virtual DbSet<Schedule> Schedules { get; set; }
+    public virtual DbSet<Schedule> Schedule { get; set; }
 
     public virtual DbSet<Supplier> Suppliers { get; set; }
 
@@ -82,7 +82,7 @@ public partial class AppDbContext : DbContext
         {
             entity.HasKey(e => e.PhysicianAdviceId).HasName("PK__Physicia__82C625F0D3DA4DB3");
 
-            entity.HasOne(d => d.Schedule).WithMany(p => p.PhysicianAdvices).HasConstraintName("FK__Physician__Sched__5EBF139D");
+           
         });
 
         modelBuilder.Entity<PhysicianPrescription>(entity =>

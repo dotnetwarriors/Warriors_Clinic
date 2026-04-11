@@ -7,23 +7,24 @@ using Microsoft.EntityFrameworkCore;
 namespace Warriors_Clinic.Models;
 
 [Table("PhysicianPrescription")]
-public partial class PhysicianPrescription
+public class PhysicianPrescription
 {
-    [Key]
     public int PrescriptionId { get; set; }
 
-    public int? PhysicianAdviceId { get; set; }
+    public int? PhysicianAdviceId { get; set; }   // FK
+
+    public string? Prescription { get; set; }
 
     public int? DrugId { get; set; }
 
-    [Column(TypeName = "text")]
-    public string? Prescription { get; set; }
-
-    [ForeignKey("DrugId")]
-    [InverseProperty("PhysicianPrescriptions")]
     public virtual Drug? Drug { get; set; }
 
-    [ForeignKey("PhysicianAdviceId")]
-    [InverseProperty("PhysicianPrescriptions")]
-    public virtual PhysicianAdvice? PhysicianAdvice { get; set; }
+    public PhysicianAdvice? PhysicianAdvice { get; set; }
+
+    public string? Dosage { get; set; }
+
+    public string? Timing { get; set; }
+
+    public string? Duration { get; set; }
+
 }

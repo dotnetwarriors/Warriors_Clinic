@@ -1,0 +1,162 @@
+﻿@{
+    ViewBag.Title = "Add Prescription";
+}
+ 
+<h2>Add Prescription</h2>
+ 
+<form asp-action="AddPrescription" method="post">
+ 
+    <input type="hidden" name="patientId" value="@Model?.Appointment?.PatientId" />
+ 
+    <!-- Advice -->
+    <div class="mb-3">
+        <label>Advice</label>
+        <textarea name="advice" class="form-control"></textarea>
+    </div>
+ 
+    <h4>Prescription</h4>
+ 
+    <table class="table" id="drugTable">
+        <thead>
+            <tr>
+                <th>Drug</th>
+                <th>Dosage</th>
+                <th>Timing</th>
+                <th>Duration</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+ 
+        <tbody>
+            <tr>
+                <!-- 🔍 SEARCHABLE DROPDOWN -->
+                <td>
+                    <select name="Drug[]" class="form-control drug-select">
+                        <option value="">-- Search Drug --</option>
+                        @foreach (var d in ViewBag.Drugs)
+                        {
+                            <option value="@d.DrugId" data-dosage="@d.Dosage">
+                                @d.Tittle
+                            </option>
+                        }
+                    </select>
+                </td>
+ 
+                <td>
+                    <input type="text" name="Dosage[]" class="form-control" />
+                </td>
+ 
+                <td>
+                    <input type="text" name="Timing[]" class="form-control" />
+                </td>
+ 
+                <td>
+                    <input type="text" name="Duration[]" class="form-control" />
+                </td>
+ 
+                <td>
+                    <button type="button" class="btn btn-danger" onclick="removeRow(this)">X</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+ 
+    <button type="button" class="btn btn-dark" onclick="addRow()">+ Add More Drug</button>
+    <button type="submit" class="btn btn-success">Send Prescription</button>
+ 
+</form>
+ 
+<!-- ✅ SELECT2 -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+ 
+<!-- ✅ SCRIPT -->
+<script>
+ 
+    // 🔥 INIT SELECT2 (SAFE VERSION)
+    function initSelect2(element) {
+    $(element).find('.drug-select').each(function () {
+ 
+    // destroy if already exists
+    if ($(this).hasClass("select2-hidden-accessible")) {
+    $(this).select2('destroy');
+    }
+ 
+    // init fresh
+    $(this).select2({
+    placeholder: "Search Drug...",
+    width: '100%'
+    });
+    });
+    }
+ 
+    // run on load
+    $(document).ready(function () {
+    initSelect2(document);
+    });
+ 
+ 
+    // ⚡ AUTO FILL DOSAGE
+    $(document).on('change', '.drug-select', function () {
+ 
+    var selectedOption = $(this).find(':selected');
+    var dosage = selectedOption.data('dosage');
+ 
+    var row = $(this).closest('tr');
+    row.find("input[name='Dosage[]']").val(dosage || '');
+    });
+ 
+    function generateDrugOptions() {
+    var options = '';
+ 
+    @foreach (var d in ViewBag.Drugs)
+    {
+        <text>
+            options += `<option value="@d.DrugId" data-dosage="@d.Dosage">@d.Tittle</option>`;
+        </text>
+    }
+ 
+    return options;
+    }
+ 
+    // ➕ ADD ROW (FINAL FIXED)
+    function addRow() {
+ 
+    var table = document.getElementById("drugTable").getElementsByTagName('tbody')[0];
+ 
+    // create fresh row (NOT clone)
+    var newRow = document.createElement("tr");
+ 
+    newRow.innerHTML = `
+    <td>
+    <select name="Drug[]" class="form-control drug-select">
+    <option value="">-- Search Drug --</option>
+    ${generateDrugOptions()}
+    </select>
+    </td>
+    <td><input type="text" name="Dosage[]" class="form-control" /></td>
+    <td><input type="text" name="Timing[]" class="form-control" /></td>
+    <td><input type="text" name="Duration[]" class="form-control" /></td>
+    <td><button type="button" class="btn btn-danger" onclick="removeRow(this)">X</button></td>
+    `;
+ 
+    table.appendChild(newRow);
+ 
+    // initialize select2 for new dropdown
+    initSelect2(newRow);
+    }
+ 
+ 
+    // ❌ REMOVE ROW
+    function removeRow(btn) {
+    var row = btn.closest("tr");
+    var table = row.parentNode;
+ 
+    if (table.rows.length > 1) {
+    row.remove();
+    }
+    }
+ 
+</script>
+ 
