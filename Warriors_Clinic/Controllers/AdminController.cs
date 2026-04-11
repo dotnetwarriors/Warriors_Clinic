@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Warriors_Clinic.Models;
 using System.Linq;
- 
+ //hey
 public class AdminController : Controller
 {
     private readonly AppDbContext _context;
