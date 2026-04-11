@@ -36,7 +36,7 @@ namespace Warriors_Clinic.Controllers
                 Address = Address,
                 Phone = Phone,
                 Email = user.Email,
-                Summary = string.IsNullOrEmpty(Summary)?"No summary provided":Summary
+                Summary = string.IsNullOrEmpty(Summary) ? "No summary provided" : Summary
             };
 
             _context.Patients.Add(patient);
@@ -47,7 +47,9 @@ namespace Warriors_Clinic.Controllers
             _context.Users.Add(user);
             _context.SaveChanges();
 
-            return RedirectToAction("Login");
+            ViewBag.Success = "Thank you for registering! Wait for Admin Approval.";
+
+            return View();
         }
 
         // ✅ LOGIN (GET)

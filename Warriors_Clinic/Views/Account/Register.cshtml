@@ -2,64 +2,95 @@
     ViewData["Title"] = "Register";
 }
 
-<div class="container d-flex justify-content-center align-items-center" style="min-height: 90vh;">
+@if (ViewBag.Success != null)
+{
+    <!-- ✅ SUCCESS SCREEN ONLY -->
+    <div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+        <div class="card shadow-lg border-0 p-5 text-center" style="max-width: 500px; width:100%;">
 
-    <div class="card shadow-lg border-0 p-4" style="width: 100%; max-width: 500px;">
+            <h5 class="fw-bold text-success mb-3">
+                @ViewBag.Success
+            </h5>
 
-        <h3 class="text-center mb-4 fw-bold">Patient Registration</h3>
+            <p class="text-muted mb-4">
+                You will be redirected to Home page in a few seconds...
+            </p>
 
-        <form method="post">
+            <a href="/Home/Index" class="btn btn-primary px-4">
+                Back to Home
+            </a>
 
-            <div class="mb-3">
-                <label class="form-label">Username</label>
-                <input name="UserName" class="form-control" placeholder="Enter username" required />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Password</label>
-                <input type="password" name="Password" class="form-control" placeholder="Enter password" required />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Email</label>
-                <input name="Email" type="email" class="form-control" placeholder="Enter email" required />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Date of Birth</label>
-                <input name="DOB" type="date" class="form-control" required />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Gender</label>
-                <select name="Gender" class="form-select" required>
-                    <option value="">Select Gender</option>
-                    <option>Male</option>
-                    <option>Female</option>
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Address</label>
-                <input name="Address" class="form-control" placeholder="Enter address" required />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Phone</label>
-                <input name="Phone" class="form-control" placeholder="Enter phone number" required />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Summary</label>
-                <textarea name="Summary" class="form-control" rows="3" placeholder="Optional notes"></textarea>
-            </div>
-
-            <button type="submit" class="btn btn-primary w-100 py-2">
-                Register
-            </button>
-
-        </form>
-
+        </div>
     </div>
 
-</div>
+    <script>
+        setTimeout(function () {
+            window.location.href = '/Home/Index';
+        }, 10000);
+    </script>
+}
+else
+{
+    <!-- ✅ FORM SCREEN ONLY -->
+    <div class="container d-flex justify-content-center align-items-center" style="min-height: 90vh;">
+
+        <div class="card shadow-lg border-0 p-4" style="width: 100%; max-width: 500px;">
+
+            <h3 class="text-center mb-4 fw-bold">Patient Registration</h3>
+
+            <form method="post">
+
+                <div class="mb-3">
+                    <label class="form-label">Username</label>
+                    <input name="UserName" class="form-control" placeholder="Enter username" required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input type="password" name="Password" class="form-control" placeholder="Enter password" required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input name="Email" type="email" class="form-control" placeholder="Enter email" required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Date of Birth</label>
+                    <input name="DOB" type="date" class="form-control" required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Gender</label>
+                    <select name="Gender" class="form-select" required>
+                        <option value="">Select Gender</option>
+                        <option>Male</option>
+                        <option>Female</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Address</label>
+                    <input name="Address" class="form-control" placeholder="Enter address" required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Phone</label>
+                    <input name="Phone" class="form-control" placeholder="Enter phone number" required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Summary</label>
+                    <textarea name="Summary" class="form-control" rows="3" placeholder="Optional notes"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 py-2">
+                    Register
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+}
