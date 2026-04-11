@@ -159,6 +159,9 @@ namespace Warriors_Clinic.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(255)");
 
+                    b.Property<bool>("IsDeletedByPhysician")
+                        .HasColumnType("bit");
+
                     b.Property<int?>("PhysicianId")
                         .HasColumnType("int");
 
@@ -227,8 +230,8 @@ namespace Warriors_Clinic.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(50)");
 
-                    b.Property<DateOnly>("Dob")
-                        .HasColumnType("date")
+                    b.Property<DateTime>("DOB")
+                        .HasColumnType("datetime2")
                         .HasColumnName("DOB");
 
                     b.Property<string>("Email")
@@ -321,9 +324,10 @@ namespace Warriors_Clinic.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PhysicianAdviceId"));
 
                     b.Property<string>("Advice")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("ScheduleId")
+                    b.Property<int>("ScheduleId")
                         .HasColumnType("int");
 
                     b.HasKey("PhysicianAdviceId")
@@ -342,14 +346,23 @@ namespace Warriors_Clinic.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PrescriptionId"));
 
+                    b.Property<string>("Dosage")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("DrugId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Duration")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("PhysicianAdviceId")
                         .HasColumnType("int");
 
                     b.Property<string>("Prescription")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Timing")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("PrescriptionId")
                         .HasName("PK__Physicia__40130832B582FABF");
@@ -375,6 +388,11 @@ namespace Warriors_Clinic.Migrations
                         .HasColumnType("datetime")
                         .HasColumnName("PODate")
                         .HasDefaultValueSql("(getdate())");
+
+                    b.Property<string>("Status")
+                        .HasMaxLength(50)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<int?>("SupplierId")
                         .HasColumnType("int");
@@ -431,6 +449,9 @@ namespace Warriors_Clinic.Migrations
 
                     b.Property<int?>("AppointmentId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsSent")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("ScheduleDate")
                         .HasColumnType("datetime");
@@ -510,10 +531,7 @@ namespace Warriors_Clinic.Migrations
 
                     b.Property<int?>("ReferenceToId")
                         .HasColumnType("int")
-                        .HasColumnName("ReferenceToID");
-
-                    b.Property<int>("RefrenceToId")
-                        .HasColumnType("int");
+                        .HasColumnName("ReferenceToId");
 
                     b.Property<string>("Role")
                         .IsRequired()
@@ -581,6 +599,8 @@ namespace Warriors_Clinic.Migrations
                     b.HasOne("Warriors_Clinic.Models.Schedule", "Schedule")
                         .WithMany("PhysicianAdvices")
                         .HasForeignKey("ScheduleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("FK__Physician__Sched__5EBF139D");
 
                     b.Navigation("Schedule");
