@@ -1,19 +1,43 @@
 ﻿@{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
- 
-<h2>🚚 Supplier Management</h2>
- 
-<div class="row">
-    <div class="col-md-6">
-        <a asp-action="AddSupplier" class="btn btn-primary w-100 p-3">
-            ➕ New Supplier
-        </a>
+
+<div class="container py-5">
+
+    <div class="text-center mb-5">
+        <h1 class="fw-bold">📋 🚚 Supplier Management</h1>
     </div>
- 
-    <div class="col-md-6">
-        <a asp-action="SupplierList" class="btn btn-dark w-100 p-3">
-            📋 Supplier List
-        </a>
+
+    <div class="row justify-content-center g-5">
+
+        <!-- ADD -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-lg border-0 text-center p-5 rounded-5 card-hover">
+
+                <h4 class="mb-4">➕ New Supplier</h4>
+
+                <a asp-action="AddSupplier"
+                       class="btn btn-outline-primary w-75 mx-auto py-3 fs-5 rounded-3">
+                    Add
+                </a>
+
+            </div>
+        </div>
+
+        <!-- LIST -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-lg border-0 text-center p-5 rounded-5 card-hover">
+
+                <h4 class="mb-4">📋 Supplier List</h4>
+
+                <a asp-action="SupplierList"
+                       class="btn btn-outline-dark w-75 mx-auto py-3 fs-5 rounded-3">
+                    View
+                </a>
+
+            </div>
+        </div>
+
     </div>
+
 </div>

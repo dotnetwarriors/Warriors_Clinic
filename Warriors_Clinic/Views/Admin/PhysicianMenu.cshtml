@@ -2,21 +2,41 @@
     ViewData["Title"] = "Physician Management";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
- 
-<h2 class="mb-4">👨‍⚕️ Physician Management</h2>
- 
-<div class="row">
- 
-    <div class="col-md-6">
-        <a asp-action="AddPhysician" class="btn btn-primary w-100 p-3">
-            ➕ New Physician
-        </a>
+
+<div class="container py-5">
+
+    <div class="text-center mb-5">
+        <h1 class="fw-bold">👨‍⚕️ Physician Management</h1>
     </div>
- 
-    <div class="col-md-6">
-        <a asp-action="PhysicianList" class="btn btn-dark w-100 p-3">
-            📋 Physician List
-        </a>
+
+    <div class="row justify-content-center g-5">
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-lg border-0 text-center p-5 rounded-5 card-hover">
+
+                <h4 class="mb-4">➕ New Physician</h4>
+
+                <a asp-action="AddPhysician"
+                       class="btn btn-outline-primary w-75 mx-auto py-3 fs-5 rounded-3">
+                    Add
+                </a>
+
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-lg border-0 text-center p-5 rounded-5 card-hover">
+
+                <h4 class="mb-4">📋 Physician List</h4>
+
+                <a asp-action="PhysicianList"
+                       class="btn btn-outline-dark w-75 mx-auto py-3 fs-5 rounded-3">
+                    View
+                </a>
+
+            </div>
+        </div>
+
     </div>
- 
+
 </div>

@@ -1,34 +1,61 @@
 ﻿@model List<Warriors_Clinic.Models.Physician>
- 
+
 @{
-    ViewData["Title"] = "Physician List";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
- 
-<h2>👨‍⚕️ Physicians</h2>
- 
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Specialization</th>
-            <th>Phone</th>
-            <th>Action</th>
-        </tr>
-    </thead>
- 
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Name</td>
-                <td>@item.Specialization</td>
-                <td>@item.Phone</td>
-                <td>
-                    <a asp-action="EditPhysician" asp-route-id="@item.PhysicianId" class="btn btn-warning btn-sm">Edit</a>
-                    <a asp-action="DeletePhysician" asp-route-id="@item.PhysicianId" class="btn btn-danger btn-sm">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+
+<div class="container mt-4">
+
+    <div class="text-center mb-4">
+        <h2 class="fw-bold">👨‍⚕️ Physicians</h2>
+    </div>
+
+    <div class="card shadow border-0">
+        <div class="card-body p-0">
+
+            <table class="table table-hover mb-0 align-middle">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>Name</th>
+                        <th>Specialization</th>
+                        <th>Phone</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="fw-semibold">@item.Name</td>
+                            <td>@item.Specialization</td>
+                            <td>@item.Phone</td>
+
+                            <td class="text-center">
+                                <div class="d-flex justify-content-center gap-2">
+
+                                    <a asp-action="EditPhysician"
+                                           asp-route-id="@item.PhysicianId"
+                                           class="btn btn-warning btn-sm px-3">
+                                        Edit
+                                    </a>
+
+                                    <a asp-action="DeletePhysician"
+                                           asp-route-id="@item.PhysicianId"
+                                           class="btn btn-danger btn-sm px-3">
+                                        Delete
+                                    </a>
+
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+
+</div>

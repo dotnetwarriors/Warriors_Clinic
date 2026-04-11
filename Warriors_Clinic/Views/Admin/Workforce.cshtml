@@ -1,23 +1,74 @@
 ﻿@{
     ViewData["Title"] = "Workforce Management";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    var currentPath = Context.Request.Path.ToString().ToLower();
 }
- 
-<h2 class="mb-4">🏥 Workforce Management</h2>
- 
-<div class="row g-3">
 
-    <div class="col-md-3">
-        <a asp-action="PhysicianMenu" class="btn btn-success w-100">Manage Physicians</a>
-    </div>
- 
-    <div class="col-md-3">
-        <a asp-action="ChemistMenu" class="btn btn-warning w-100">Manage Chemists</a>
-    </div>
- 
-    <div class="col-md-3">
-        <a asp-action="SupplierMenu" class="btn btn-danger w-100">Manage Suppliers</a>
+<div class="container py-5">
+
+    <!-- ✅ CENTERED TITLE -->
+    <div class="text-center mb-5">
+        <h2 class="fw-bold">🏥 Workforce Management</h2>
     </div>
 
- 
+    <!-- ✅ CENTERED CARDS -->
+    <div class="row justify-content-center g-5">
+
+        <!-- PHYSICIANS -->
+        @if (!currentPath.Contains("physician"))
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="card shadow-lg border-0 p-5 text-center h-100 rounded-4">
+
+                    <h4 class="mb-4">Physicians</h4>
+
+                    <a asp-controller="Admin"
+                           asp-action="PhysicianMenu"
+                           class="btn btn-outline-success w-100 py-3 fs-5 fw-semibold hover-fill-success">
+                        Manage
+                    </a>
+
+                </div>
+            </div>
+        }
+
+        <!-- CHEMISTS -->
+        @if (!currentPath.Contains("chemist"))
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="card shadow-lg border-0 p-5 text-center h-100 rounded-4">
+
+                    <h4 class="mb-4">Chemists</h4>
+
+                    <a asp-controller="Admin"
+                           asp-action="ChemistMenu"
+                           class="btn btn-outline-warning w-100 py-3 fs-5 fw-semibold hover-fill-warning">
+                        Manage
+                    </a>
+
+                </div>
+            </div>
+        }
+
+        <!-- SUPPLIERS -->
+        @if (!currentPath.Contains("supplier"))
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="card shadow-lg border-0 p-5 text-center h-100 rounded-4">
+
+                    <h4 class="mb-4">Suppliers</h4>
+
+                    <a asp-controller="Admin"
+                           asp-action="SupplierMenu"
+                           class="btn btn-outline-danger w-100 py-3 fs-5 fw-semibold hover-fill-danger">
+                        Manage
+                    </a>
+
+                </div>
+            </div>
+        }
+
+    </div>
+
 </div>

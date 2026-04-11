@@ -1,98 +1,122 @@
 ﻿@model IEnumerable<Warriors_Clinic.Models.Appointment>
- 
+
 @{
     ViewData["Title"] = "Appointment Requests";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
- 
-<h2 class="mb-4">📋 Appointment Requests</h2>
- 
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Patient</th>
-            <th>Doctor</th>
-            <th>Date & Time</th>
-            <th>Reason</th>
-            <th>Status</th>
-            <th style="width:300px;">Actions</th>
-        </tr>
-    </thead>
- 
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <!-- ✅ Patient Name -->
-                <td>@item.Patient?.Name</td>
- 
-                <!-- ✅ Doctor Name -->
-                <td>@item.Physician?.Name</td>
- 
-                <!-- ✅ Date + Reschedule -->
-                <td>
-                    @if (item.ScheduleStatus == "Pending")
+
+<div class="container-fluid mt-4">
+
+    <!-- HEADER -->
+    <div class="text-center mb-4">
+        <h2 class="fw-bold">📋 Appointment Requests</h2>
+    </div>
+
+    <!-- TABLE -->
+    <div class="card shadow border-0">
+        <div class="card-body p-0">
+
+            <table class="table table-hover mb-0 align-middle">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>Patient</th>
+                        <th>Doctor</th>
+                        <th>Date & Time</th>
+                        <th>Reason</th>
+                        <th>Status</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model)
                     {
-                        <form asp-action="Reschedule" method="post" style="display:flex; gap:5px;">
-                            <input type="hidden" name="id" value="@item.AppointmentId" />
- 
-                            <input type="datetime-local"
-                                   name="newDate"
-                                   value="@(item.AppointmentDateTime.HasValue ? item.AppointmentDateTime.Value.ToString("yyyy-MM-ddTHH:mm"): "")"
-                                   class="form-control" />
- 
-                            <button type="submit" class="btn btn-warning btn-sm">
-                                Update
-                            </button>
-                        </form>
+                        <tr>
+
+                            <!-- PATIENT -->
+                            <td class="fw-semibold">@item.Patient?.Name</td>
+
+                            <!-- DOCTOR -->
+                            <td>@item.Physician?.Name</td>
+
+                            <!-- DATE + RESCHEDULE -->
+                            <td style="min-width:220px;">
+                                @if (item.ScheduleStatus == "Pending")
+                                {
+                                    <form asp-action="Reschedule" method="post" class="d-flex gap-2">
+                                        <input type="hidden" name="id" value="@item.AppointmentId" />
+
+                                        <input type="datetime-local"
+                                               name="newDate"
+                                               value="@(item.AppointmentDateTime.HasValue? item.AppointmentDateTime.Value.ToString("yyyy-MM-ddTHH:mm") : "")"
+                                               class="form-control form-control-sm" />
+
+                                        <button type="submit" class="btn btn-warning btn-sm">
+                                            Update
+                                        </button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">
+                                        @item.AppointmentDateTime?.ToString("dd MMM yyyy, hh:mm tt")
+                                    </span>
+                                }
+                            </td>
+
+                            <!-- REASON -->
+                            <td>@item.Reason</td>
+
+                            <!-- STATUS -->
+                            <td>
+                                @if (item.ScheduleStatus == "Approved")
+                                {
+                                    <span class="badge bg-success px-3 py-2">Approved</span>
+                                }
+                                else if (item.ScheduleStatus == "Rejected")
+                                {
+                                    <span class="badge bg-danger px-3 py-2">Rejected</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning text-dark px-3 py-2">Pending</span>
+                                }
+                            </td>
+
+                            <!-- ACTIONS -->
+                            <td class="text-center">
+                                @if (item.ScheduleStatus == "Pending")
+                                {
+                                    <div class="d-flex justify-content-center gap-2">
+
+                                        <a asp-action="ApproveAppointment"
+                                               asp-route-id="@item.AppointmentId"
+                                               class="btn btn-success btn-sm px-3">
+                                            ✔ Approve
+                                        </a>
+
+                                        <a asp-action="RejectAppointment"
+                                               asp-route-id="@item.AppointmentId"
+                                               class="btn btn-danger btn-sm px-3">
+                                            ✖ Reject
+                                        </a>
+
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">No actions</span>
+                                }
+                            </td>
+
+                        </tr>
                     }
-                    else
-                    {
-                        <span>@item.AppointmentDateTime</span>
-                    }
-                </td>
- 
-                <!-- ✅ Reason -->
-                <td>@item.Reason</td>
- 
-                <!-- ✅ Status Badge -->
-                <td>
-                    @if (item.ScheduleStatus == "Pending")
-                    {
-                        <span class="badge bg-warning text-dark">Pending</span>
-                    }
-                    else if (item.ScheduleStatus == "Approved")
-                    {
-                        <span class="badge bg-success">Approved</span>
-                    }
-                    else
-                    {
-                        <span class="badge bg-danger">Rejected</span>
-                    }
-                </td>
- 
-                <!-- ✅ Actions -->
-                <td>
-                    @if (item.ScheduleStatus == "Pending")
-                    {
-                        <a asp-action="ApproveAppointment"
-                               asp-route-id="@item.AppointmentId"
-                               class="btn btn-success btn-sm">
-                            ✔ Approve
-                        </a>
- 
-                        <a asp-action="RejectAppointment"
-                               asp-route-id="@item.AppointmentId"
-                               class="btn btn-danger btn-sm">
-                            ✖ Reject
-                        </a>
-                    }
-                    else
-                    {
-                        <span class="text-muted">No actions</span>
-                    }
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+
+</div>
