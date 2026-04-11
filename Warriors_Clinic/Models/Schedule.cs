@@ -19,7 +19,7 @@ public partial class Schedule
 
     [StringLength(50)]
     [Unicode(false)]
-    public string? ScheduleStatus { get; set; }
+    public ScheduleStatusEnum ScheduleStatus { get; set; }
 
     [ForeignKey("AppointmentId")]
     [InverseProperty("Schedules")]

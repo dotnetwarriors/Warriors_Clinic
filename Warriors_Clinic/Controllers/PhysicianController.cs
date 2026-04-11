@@ -56,15 +56,12 @@ namespace Warriors_Clinic.Controllers
 
             if (appointment != null)
             {
-                appointment.ScheduleStatus = "Consulted";
-                _context.SaveChanges();
-
-                // 🔥 INSERT INTO SCHEDULE TABLE
+                
                 var schedule = new Schedule
                 {
                     AppointmentId = appointment.AppointmentId,
                     ScheduleDate = DateTime.Now,
-                    ScheduleStatus = "Consulted"
+                    ScheduleStatus = ScheduleStatusEnum.Consulted
                 };
 
                 _context.Schedule.Add(schedule);
@@ -79,7 +76,7 @@ namespace Warriors_Clinic.Controllers
             var data = _context.Schedule
                 .Include(s => s.Appointment)
                     .ThenInclude(a => a.Patient)
-                .Where(s => s.ScheduleStatus == "Consulted")
+                .Where(s => s.ScheduleStatus == ScheduleStatusEnum.Consulted)
                 .ToList();
 
             return View(data);
