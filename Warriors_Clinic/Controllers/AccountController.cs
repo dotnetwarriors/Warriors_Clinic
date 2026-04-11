@@ -63,35 +63,54 @@ namespace Warriors_Clinic.Controllers
         public IActionResult Login(string username, string password)
         {
             var user = _context.Users
-                .FirstOrDefault(u => u.UserName == username && u.Password == password);
+    .FirstOrDefault(u => u.UserName == username && u.Password == password);
 
             if (user != null)
             {
-                HttpContext.Session.SetString("UserName", user.UserName);
+                // ✅ Role
                 HttpContext.Session.SetString("UserRole", user.Role);
 
+                // ✅ Safe email handling
+                if (string.IsNullOrEmpty(user.Email))
+                {
+                    return Content("User email is missing. Fix DB.");
+                }
+
+                HttpContext.Session.SetString("UserName", user.Email);
+
+                // ✅ Patient ID mapping (CRITICAL)
+                if (user.Role == "Patient")
+                {
+                    var patient = _context.Patients
+                        .FirstOrDefault(p => p.Email == user.Email);
+
+                    if (patient != null)
+                    {
+                        HttpContext.Session.SetInt32("PatientId", patient.PatientId);
+                    }
+                    else
+                    {
+                        return Content("Patient record not found for this email");
+                    }
+                }
+
+                // ✅ Redirect
                 if (user.Role == "Admin")
                     return RedirectToAction("Dashboard", "Admin");
-
 
                 if (user.Role == "Patient")
                     return RedirectToAction("Dashboard", "Patient");
 
-
                 if (user.Role == "Physician")
                     return RedirectToAction("Dashboard", "Physician");
-
 
                 if (user.Role == "Chemist")
                     return RedirectToAction("Dashboard", "Chemist");
 
-
                 if (user.Role == "Supplier")
                     return RedirectToAction("Dashboard", "Supplier");
-
-
-                return RedirectToAction("Index", "Home");
             }
+
 
             ViewBag.Error = "Invalid login";
             return View();
