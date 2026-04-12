@@ -43,20 +43,42 @@ namespace Warriors_Clinic.Controllers
 
             var data = _context.Appointments
                 .Where(a => a.PhysicianId == physician.PhysicianId
-                            && a.ScheduleStatus == "Approved")
+                     && ( a.ScheduleStatus == "Approved" || a.ScheduleStatus == "Consulted")
+                     && a.IsVisibleToDoctor == true)        
                 .Include(a => a.Patient)   // ✅ VERY IMPORTANT
                 .ToList();
 
             return View(data);
         }
-        
+
         public IActionResult Consulted(int id)
         {
-            var appointment = _context.Appointments.Find(id);
+            var appointment = _context.Appointments
+                .FirstOrDefault(a => a.AppointmentId == id);
 
-            if (appointment != null)
+            if (appointment == null)
             {
-                
+                return NotFound();
+            }
+
+            // ✅ Prevent multiple clicks
+            if (appointment.ScheduleStatus == "Consulted")
+            {
+                return RedirectToAction("Appointments");
+            }
+
+            // ✅ Update Appointment table (MAIN FIX)
+            appointment.ScheduleStatus = "Consulted";
+
+            // ✅ Force EF to detect change
+            _context.Entry(appointment).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+
+            // ✅ Check if already exists in Schedule table
+            var existingSchedule = _context.Schedule
+                .FirstOrDefault(s => s.AppointmentId == id);
+
+            if (existingSchedule == null)
+            {
                 var schedule = new Schedule
                 {
                     AppointmentId = appointment.AppointmentId,
@@ -65,49 +87,89 @@ namespace Warriors_Clinic.Controllers
                 };
 
                 _context.Schedule.Add(schedule);
-                _context.SaveChanges();
             }
 
-            return RedirectToAction("Appointments"); // stay here
+            _context.SaveChanges();
+
+            return RedirectToAction("Appointments");
+        }
+
+        public IActionResult HideFromDashboard(int id)
+        {
+            var appointment = _context.Appointments
+                .FirstOrDefault(a => a.AppointmentId == id);
+
+            if (appointment == null)
+            {
+                return NotFound();
+            }
+
+            appointment.IsVisibleToDoctor = false;
+
+            _context.Entry(appointment).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+
+            _context.SaveChanges();
+
+            return RedirectToAction("Appointments");
         }
 
         public IActionResult Prescriptions()
         {
             var data = _context.Schedule
                 .Include(s => s.Appointment)
-                    .ThenInclude(a => a.Patient)
-                .Where(s => s.ScheduleStatus == ScheduleStatusEnum.Consulted)
+                .ThenInclude(a => a.Patient)
+                .Where(s => (s.ScheduleStatus == ScheduleStatusEnum.Consulted
+                          || s.ScheduleStatus == ScheduleStatusEnum.Added)
+                         && s.Appointment.IsVisibleToDoctor == true)
                 .ToList();
 
             return View(data);
         }
 
-       public IActionResult AddPrescription(int id)
-{
-    var schedule = _context.Schedule
-        .Include(s => s.Appointment)
-        .ThenInclude(a => a.Patient)
-        .FirstOrDefault(s => s.ScheduleId == id);
- 
-    // ✅ ADD THIS (VERY IMPORTANT)
-    ViewBag.Drugs = _context.Drugs.ToList();
- 
-    // ✅ ALSO FIX THIS (important for POST)
-    ViewBag.PatientId = schedule?.Appointment?.PatientId;
- 
-    return View(schedule);
-}
+        public IActionResult AddPrescription(int id)
+        {
+            var schedule = _context.Schedule
+                .Include(s => s.Appointment)
+                .ThenInclude(a => a.Patient)
+                .FirstOrDefault(s => s.ScheduleId == id);
 
+            if (schedule == null)
+                return NotFound();
+
+            // ✅ IMPORTANT
+            ViewBag.AppointmentId = schedule.Appointment.AppointmentId;
+            ViewBag.PatientId = schedule.Appointment.PatientId;
+
+            ViewBag.Drugs = _context.Drugs.ToList();
+
+            return View(schedule);
+        }
         [HttpPost]
         public IActionResult AddPrescription(
             int patientId,
+            int appointmentId, // ✅ ADD THIS (IMPORTANT)
             string advice,
-            List<int> Drug,          // ✅ NOW using DrugId
+            List<int> Drug,
             List<string> Dosage,
             List<string> Timing,
             List<string> Duration)
         {
-            // Save Advice
+            // ✅ STEP 1: Check appointment exists
+            var appointment = _context.Appointments
+                .FirstOrDefault(a => a.AppointmentId == appointmentId);
+
+            if (appointment == null)
+            {
+                return NotFound();
+            }
+
+            // ✅ STEP 2: Prevent duplicate prescription
+            if (appointment.ScheduleStatus == "Added")
+            {
+                return RedirectToAction("Prescriptions");
+            }
+
+            // ✅ STEP 3: Save Advice
             var adviceEntry = new PhysicianAdvice
             {
                 PatientId = patientId,
@@ -115,17 +177,17 @@ namespace Warriors_Clinic.Controllers
             };
 
             _context.PhysicianAdvices.Add(adviceEntry);
-            _context.SaveChanges();
+            _context.SaveChanges(); // needed to get AdviceId
 
-            // Save Prescription
+            // ✅ STEP 4: Save Prescription (Multiple drugs)
             for (int i = 0; i < Drug.Count; i++)
             {
-                if (Drug[i] != 0) // skip empty selection
+                if (Drug[i] != 0)
                 {
                     var prescription = new PhysicianPrescription
                     {
                         PhysicianAdviceId = adviceEntry.PhysicianAdviceId,
-                        DrugId = Drug[i],   // ✅ DIRECT SAVE (NO LOOKUP)
+                        DrugId = Drug[i],
                         Dosage = Dosage[i],
                         Timing = Timing[i],
                         Duration = Duration[i]
@@ -135,8 +197,28 @@ namespace Warriors_Clinic.Controllers
                 }
             }
 
+            // ✅ STEP 5: UPDATE STATUS → MAIN REQUIREMENT
+            appointment.ScheduleStatus = ScheduleStatusEnum.Added.ToString();
+
+            // ✅ ALSO UPDATE SCHEDULE TABLE (CRITICAL FIX)
+            var schedule = _context.Schedule
+                .FirstOrDefault(s => s.AppointmentId == appointmentId);
+
+            if (schedule != null)
+            {
+                schedule.ScheduleStatus = ScheduleStatusEnum.Added;
+
+                _context.Entry(schedule).State =
+                    Microsoft.EntityFrameworkCore.EntityState.Modified;
+            }
+
+            _context.Entry(appointment).State =
+                Microsoft.EntityFrameworkCore.EntityState.Modified;
+
+            // ✅ STEP 6: SAVE ALL
             _context.SaveChanges();
 
+            // ✅ STEP 7: REDIRECT BACK
             return RedirectToAction("Prescriptions");
         }
 
@@ -153,6 +235,23 @@ namespace Warriors_Clinic.Controllers
 
             return RedirectToAction("Appointment");
         }
+        public IActionResult DeleteFromPrescription(int id)
+        {
+            var schedule = _context.Schedule
+                .Include(s => s.Appointment)
+                .FirstOrDefault(s => s.ScheduleId == id);
+
+            if (schedule != null)
+            {
+                // ✅ Hide from Prescription dashboard ONLY
+                schedule.Appointment.IsVisibleToDoctor = false;
+
+                _context.SaveChanges();
+            }
+
+            // ✅ Stay on SAME PAGE
+            return RedirectToAction("Prescriptions");
+        }
 
         public IActionResult DrugRequests()
         {
@@ -161,15 +260,24 @@ namespace Warriors_Clinic.Controllers
             var physician = _context.Users
                 .FirstOrDefault(u => u.UserName == userName);
 
+            if (physician == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             var requests = _context.DrugRequests
-            .Where(r => r.PhysicianId == physician.ReferenceToId
-              && r.IsDeletedByPhysician == false)
-             .ToList();
+                .Include(r => r.Chemist) // ✅ FIXED
+                .Where(r => r.PhysicianId == physician.ReferenceToId
+                         && r.IsDeletedByPhysician == false)
+                .ToList();
+
+            ViewBag.Chemists = _context.Chemists.ToList();
+
             return View(requests);
         }
 
         [HttpPost]
-        public IActionResult CreateDrugRequest(string DrugInfoText)
+        public IActionResult CreateDrugRequest(string DrugInfoText, int ChemistId)
         {
             var userName = HttpContext.Session.GetString("UserName");
 
@@ -184,9 +292,11 @@ namespace Warriors_Clinic.Controllers
             var request = new DrugRequest
             {
                 PhysicianId = physician.ReferenceToId,
-                DrugInfoText = DrugInfoText,
+                DrugInfoText = string.IsNullOrEmpty(DrugInfoText) ? "Unknown Drug" : DrugInfoText,
+                ChemistId = ChemistId, // ✅ FIXED FORMAT
                 RequestDate = DateTime.Now,
-                RequestStatus = "Pending"
+                RequestStatus = "Pending",
+                IsDeletedByPhysician = false // ✅ GOOD PRACTICE
             };
 
             _context.DrugRequests.Add(request);
@@ -194,18 +304,21 @@ namespace Warriors_Clinic.Controllers
 
             return RedirectToAction("DrugRequests");
         }
+
+
         public IActionResult DeleteDrugRequest(int id)
         {
             var req = _context.DrugRequests.Find(id);
 
             if (req != null)
             {
-                req.IsDeletedByPhysician = true; // 👈 SOFT DELETE
+                req.IsDeletedByPhysician = true; // ✅ SOFT DELETE
                 _context.SaveChanges();
             }
 
-            return RedirectToAction("DrugRequests");
+            return RedirectToAction("DrugRequests"); // ✅ stay on same page
         }
+
 
         public IActionResult Chat()
         {

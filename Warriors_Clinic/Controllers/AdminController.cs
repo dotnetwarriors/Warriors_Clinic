@@ -376,7 +376,6 @@ public class AdminController : Controller
         if (appointment != null)
         {
             appointment.ScheduleStatus = "Approved";
-            
             _context.SaveChanges();
         }
 
@@ -385,28 +384,33 @@ public class AdminController : Controller
 
     public IActionResult RejectAppointment(int id)
     {
-        var appt = _context.Appointments.Find(id);
- 
-        if (appt == null) return NotFound();
- 
-        appt.ScheduleStatus = "Rejected";
-        _context.SaveChanges();
- 
+        var appointment = _context.Appointments.Find(id);
+
+        if (appointment != null)
+        {
+            appointment.ScheduleStatus = "Rejected";
+            _context.SaveChanges();
+        }
+
         return RedirectToAction("AppointmentRequests");
     }
- 
+
     [HttpPost]
     public IActionResult Reschedule(int id, DateTime newDate)
     {
-        var appt = _context.Appointments.Find(id);
- 
-        if (appt != null)
+        var appointment = _context.Appointments.Find(id);
+
+        if (appointment != null)
         {
-            appt.AppointmentDateTime = newDate;
-            appt.ScheduleStatus = "Approved";
+            // ✅ ONLY update date
+            appointment.AppointmentDateTime = newDate;
+
+           
+
             _context.SaveChanges();
         }
- 
+
         return RedirectToAction("AppointmentRequests");
     }
+
 }

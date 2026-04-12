@@ -28,8 +28,10 @@
                     foreach (var item in Model)
                     {
                         <tr>
-                            <td><strong>@item.Physician?.Name</strong></td>
-                            <td>@item.DrugInfoText</td>
+                            <td>@(item.Physician != null? item.Physician.Name : "N/A")</td>
+                            <td>
+                                @(string.IsNullOrEmpty(item.DrugInfoText) ? "No Drug Info" : item.DrugInfoText)
+                            </td>
                             <td>@item.RequestDate?.ToString("dd MMM yyyy")</td>
                             <td>@item.RequestStatus</td>
                             <td>

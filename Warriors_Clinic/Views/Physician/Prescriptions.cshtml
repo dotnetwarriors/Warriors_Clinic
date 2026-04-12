@@ -34,20 +34,42 @@
  
                 <td>@item.Appointment.AppointmentDateTime</td>
                 <td>@item.Appointment.Reason</td>
- 
                 <td>
-                    <span class="badge bg-success">Consulted</span>
+                    @if (item.ScheduleStatus == ScheduleStatusEnum.Consulted)
+                    {
+                        <span class="badge bg-success">Consulted</span>
+                    }
+                    else if (item.ScheduleStatus.ToString() == "Added")
+                    {
+                        <span class="badge bg-primary">Prescription Added</span>
+                    }
                 </td>
  
                 <td>
-                    <a asp-action="AddPrescription"
-                           asp-route-id="@item.ScheduleId"
-                           class="btn btn-primary btn-sm">
-                        Add Prescription
-                    </a>
-                 
-                   
+                    @if (item.ScheduleStatus == ScheduleStatusEnum.Consulted)
+                    {
+                        <a asp-action="AddPrescription"
+                               asp-controller="Physician"
+                               asp-route-id="@item.ScheduleId"
+                               class="btn btn-primary btn-sm">
+                            Add Prescription
+                        </a>
+                    }
+                    else
+                    {
+                        <button class="btn btn-secondary btn-sm" disabled>
+                            Prescription Added
+                        </button>
+ 
+                        <a asp-action="DeleteFromPrescription"
+                               asp-controller="Physician"
+                               asp-route-id="@item.ScheduleId"
+                               class="btn btn-danger btn-sm">
+                            Delete
+                        </a>
+                    }
                 </td>
+ 
             </tr>
         }
     </tbody>

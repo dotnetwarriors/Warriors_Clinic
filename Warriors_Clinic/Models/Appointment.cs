@@ -42,6 +42,9 @@ namespace Warriors_Clinic.Models;
         [InverseProperty("Appointments")]
         public virtual Physician? Physician { get; set; }
 
+        public bool IsVisibleToDoctor { get; set; } = true;
+
+
         [InverseProperty("Appointment")]
         public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
     }

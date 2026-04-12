@@ -4,9 +4,10 @@
  
 <h2>Add Prescription</h2>
  
-<form asp-action="AddPrescription" method="post">
+<form asp-action="AddPrescription" asp-controller="Physician" method="post">
  
-    <input type="hidden" name="patientId" value="@Model?.Appointment?.PatientId" />
+    <input type="hidden" name="appointmentId" value="@ViewBag.AppointmentId" />
+    <input type="hidden" name="patientId" value="@ViewBag.PatientId" />
  
     <!-- Advice -->
     <div class="mb-3">

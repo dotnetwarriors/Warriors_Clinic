@@ -35,16 +35,38 @@
  
                 <!-- Status -->
                 <td>
-                    <span class="badge bg-success">Approved</span>
+                    @if (item.ScheduleStatus == "Approved")
+                    {
+                        <span class="badge bg-success">Approved</span>
+                    }
+                    else if (item.ScheduleStatus == "Consulted")
+                    {
+                        <span class="badge bg-info">Consulted</span>
+                    }
                 </td>
  
                 <!-- Action -->
                 <td>
-                    <a asp-action="Consulted"
-                           asp-route-id="@item.AppointmentId"
-                           class="btn btn-success btn-sm">
-                           Consulted
-                    </a>
+                    @if (item.ScheduleStatus == "Approved")
+                    {
+                        <a asp-action="Consulted"
+                               asp-route-id="@item.AppointmentId"
+                               class="btn btn-success btn-sm">
+                            Consulted
+                        </a>
+                    }
+                    else if (item.ScheduleStatus == "Consulted")
+                    {
+                        <button class="btn btn-secondary btn-sm" disabled>
+                            Consulted
+                        </button>
+ 
+                        <a asp-action="HideFromDashboard"
+                               asp-route-id="@item.AppointmentId"
+                               class="btn btn-danger btn-sm">
+                            Delete
+                        </a>
+                    }
                 </td>
             </tr>
         }

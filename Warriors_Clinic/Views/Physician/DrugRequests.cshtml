@@ -16,6 +16,7 @@
     <thead class="table-light">
         <tr>
             <th>Drug</th>
+            <th>Chemist</th>
             <th>Date</th>
             <th>Status</th>
             <th>Action</th>
@@ -28,7 +29,11 @@
             foreach (var item in Model)
             {
                 <tr>
-                    <td>@item.DrugInfoText</td>
+                    <td>
+                        @(string.IsNullOrEmpty(item.DrugInfoText) ? "No Drug Info" : item.DrugInfoText)
+                    </td>
+
+                    <td>@item.Chemist?.Name</td>
  
                     <td>
                         @item.RequestDate?.ToString("dd-MM-yyyy HH:mm")
@@ -80,16 +85,25 @@
  
         <form asp-action="CreateDrugRequest" method="post">
  
-            <div class="form-group">
-                <label>Drug Details</label>
-                <input type="text"
-                       name="DrugInfoText"
-                       class="form-control"
-                       placeholder="Enter drug name (e.g., Dolo650)"
-                       required />
+            <!-- ✅ Select Chemist -->
+            <div class="mb-3">
+                <label>Select Chemist</label>
+                <select name="ChemistId" class="form-control" required>
+                    <option value="">-- Select Chemist --</option>
+                    @foreach (var chemist in ViewBag.Chemists)
+                    {
+                        <option value="@chemist.ChemistId">
+                            @chemist.Name
+                        </option>
+                    }
+                </select>
             </div>
  
-            <br />
+            <!-- Drug Name -->
+            <div class="mb-3">
+                <label>Drug Name</label>
+                <input type="text" name="DrugInfoText" class="form-control" required />
+            </div>
  
             <button type="submit" class="btn btn-success">Submit</button>
         </form>

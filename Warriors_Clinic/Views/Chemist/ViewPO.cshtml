@@ -1,0 +1,48 @@
+﻿@model List<Warriors_Clinic.Models.PurchaseOrderHeader>
+
+@{
+    ViewData["Title"] = "ViewPO";
+    Layout = "~/Views/Shared/_PatientLayout.cshtml";
+}
+
+
+ 
+<h2>Purchase Orders</h2>
+ 
+<a href="/Chemist/CreatePO" class="btn btn-primary mb-3">+ New Order</a>
+ 
+@foreach (var po in Model.Where(p => p.Status != "Deleted"))
+{
+    <div class="card mb-3 p-3 shadow-sm">
+ 
+        <h5>
+            PO ID: @po.Poid | Supplier: @po.Supplier?.Name
+            <span class="badge bg-warning text-dark">@po.Status</span>
+        </h5>
+ 
+        <table class="table">
+            <tr>
+                <th>Drug</th>
+                <th>Quantity</th>
+            </tr>
+ 
+            @foreach (var line in po.PurchaseOrderLines)
+            {
+                <tr>
+                    <td>@line.Drug?.Tittle</td>
+                    <td>@line.Quantity</td>
+                </tr>
+            }
+        </table>
+ 
+        <!-- ACTION -->
+        @if (po.Status?.Equals("Approved")== true)
+        {
+            <a asp-action="DeletePO"
+               asp-route-id="@po.Poid"
+               class="btn btn-danger btn-sm">Delete</a>
+        }
+ 
+    </div>
+}
+  

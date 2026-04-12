@@ -26,7 +26,9 @@ public partial class DrugRequest
 
     public bool IsDeletedByPhysician { get; set; } = false;
 
+    public int? ChemistId {  get; set; }
+    public Chemist? Chemist { get; set; }
+
     [ForeignKey("PhysicianId")]
-    [InverseProperty("DrugRequests")]
     public virtual Physician? Physician { get; set; }
 }

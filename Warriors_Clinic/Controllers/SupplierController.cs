@@ -31,14 +31,21 @@ namespace Warriors_Clinic.Controllers
         // VIEW ALL PURCHASE ORDERS
         public IActionResult ViewPO()
         {
-            var data = _context.PurchaseOrderHeaders
-                .Include(p => p.Supplier)
+            var userName = HttpContext.Session.GetString("UserName");
+
+            var supplier = _context.Users
+                .FirstOrDefault(u => u.UserName == userName);
+
+            var pos = _context.PurchaseOrderHeaders
                 .Include(p => p.PurchaseOrderLines)
-                .ThenInclude(l => l.Drug)
+                    .ThenInclude(l => l.Drug)
+                .Include(p => p.Supplier)
+                .Where(p => p.SupplierId == supplier.ReferenceToId) // ✅ IMPORTANT
                 .ToList();
 
-            return View(data);
+            return View(pos);
         }
+
 
         // ACCEPT PO
         public IActionResult ApprovePO(int id)

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Warriors_Clinic.Models;
+using Warriors_Clinic.Models.ViewModels;
 
 namespace Warriors_Clinic.Controllers
 {
@@ -22,12 +23,30 @@ namespace Warriors_Clinic.Controllers
         // 🔹 VIEW DRUG REQUESTS
         public IActionResult DrugRequests()
         {
+            var userName = HttpContext.Session.GetString("UserName");
+
+            var user = _context.Users
+                .FirstOrDefault(u => u.UserName == userName);
+
+            var chemist = _context.Chemists
+                .FirstOrDefault(c => c.ChemistId == user.ReferenceToId);
+
+            if (chemist == null)
+            {
+                return Content("Chemist not found"); // debug safety
+            }
+
             var requests = _context.DrugRequests
-                .Include(r => r.Physician)
+                .Include(r => r.Chemist)
+                .Include(r => r.Physician) // ✅ ADD THIS
+                .AsNoTracking()
+                .Where(r => r.ChemistId == chemist.ChemistId
+                            && r.IsDeletedByPhysician == false)
                 .ToList();
 
             return View(requests);
         }
+
         public IActionResult UpdateStatus(int id, string status)
         {
             var request = _context.DrugRequests.Find(id);
@@ -68,6 +87,28 @@ namespace Warriors_Clinic.Controllers
 
             return RedirectToAction("DrugRequests");
         }
+
+        //==================Purchase order =============================
+
+        public IActionResult POHome()
+        {
+            return View();
+        }
+
+        public IActionResult POList()
+        {
+            var pos = _context.PurchaseOrderHeaders
+                .Include(p => p.Supplier)
+                .Include(p => p.PurchaseOrderLines)
+                    .ThenInclude(l => l.Drug)
+                .Where(p => p.Status != "Deleted") // ✅ soft delete
+                .OrderByDescending(p => p.Poid)
+                .ToList();
+
+            return View(pos);
+        }
+
+
         public IActionResult CreatePO()
         {
             ViewBag.Suppliers = _context.Suppliers.ToList();
@@ -77,38 +118,63 @@ namespace Warriors_Clinic.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreatePO(int supplierId, List<int> drugIds, List<int> quantities)
+        public IActionResult CreatePO(PurchaseOrderVM model)
         {
-            // Create Header
+            if (model == null || model.Lines.Count == 0)
+                return View(model);
+
+            // HEADER
             var header = new PurchaseOrderHeader
             {
+                SupplierId = model.SupplierId,
                 Podate = DateTime.Now,
-                SupplierId = supplierId,
                 Status = "Pending"
             };
 
             _context.PurchaseOrderHeaders.Add(header);
-            _context.SaveChanges(); // important to get POId
+            _context.SaveChanges();
 
-            // Create Lines
-            for (int i = 0; i < drugIds.Count; i++)
+            // LINES
+            foreach (var line in model.Lines)
             {
-                if (quantities[i] > 0)
+                var poLine = new PurchaseOrderLine
                 {
-                    var line = new PurchaseOrderLine
-                    {
-                        Poid = header.Poid,
-                        DrugId = drugIds[i],
-                        Quantity = quantities[i]
-                    };
+                    Poid = header.Poid,
+                    DrugId = line.DrugId,
+                    Quantity = line.Quantity,
+                    Note = line.Note
+                };
 
-                    _context.PurchaseOrderLines.Add(line);
-                }
+                _context.PurchaseOrderLines.Add(poLine);
             }
 
             _context.SaveChanges();
 
-            return RedirectToAction("Dashboard");
+            return RedirectToAction("POList");
+        }
+        public IActionResult ViewPO()
+        {
+            var pos = _context.PurchaseOrderHeaders
+                .Include(p => p.Supplier)
+                .Include(p => p.PurchaseOrderLines)
+                    .ThenInclude(l => l.Drug)
+                .OrderByDescending(p => p.Poid)
+                .ToList();
+
+            return View(ViewPO);
+
+        }
+        public IActionResult DeletePO(int id)
+        {
+            var po = _context.PurchaseOrderHeaders.Find(id);
+
+            if (po != null)
+            {
+                po.Status = "Deleted"; // ✅ NOT removing from DB
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("POList");
         }
     }
 }

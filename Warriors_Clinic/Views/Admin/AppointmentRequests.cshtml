@@ -70,13 +70,17 @@
 
                             <!-- STATUS -->
                             <td>
-                                @if (item.ScheduleStatus == "Approved")
+                                @if (item.ScheduleStatus?.Trim().ToLower() == "approved")
                                 {
                                     <span class="badge bg-success px-3 py-2">Approved</span>
                                 }
-                                else if (item.ScheduleStatus == "Rejected")
+                                else if (item.ScheduleStatus?.Trim().ToLower() == "rejected")
                                 {
                                     <span class="badge bg-danger px-3 py-2">Rejected</span>
+                                }
+                                else if (item.ScheduleStatus?.Trim().ToLower() == "consulted")
+                                {
+                                    <span class="badge bg-info px-3 py-2">Consulted</span>
                                 }
                                 else
                                 {
@@ -86,28 +90,32 @@
 
                             <!-- ACTIONS -->
                             <td class="text-center">
-                                @if (item.ScheduleStatus == "Pending")
-                                {
-                                    <div class="d-flex justify-content-center gap-2">
-
-                                        <a asp-action="ApproveAppointment"
-                                               asp-route-id="@item.AppointmentId"
-                                               class="btn btn-success btn-sm px-3">
-                                            ✔ Approve
-                                        </a>
-
-                                        <a asp-action="RejectAppointment"
-                                               asp-route-id="@item.AppointmentId"
-                                               class="btn btn-danger btn-sm px-3">
-                                            ✖ Reject
-                                        </a>
-
-                                    </div>
-                                }
-                                else
-                                {
-                                    <span class="text-muted">No actions</span>
-                                }
+                                <td class="text-center">
+                                    @if (!string.IsNullOrWhiteSpace(item.ScheduleStatus) &&
+                                        item.ScheduleStatus.Trim().Equals("Pending", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <a asp-action="ApproveAppointment"
+                                                   asp-route-id="@item.AppointmentId"
+                                                   class="btn btn-success btn-sm px-3">
+                                                ✔ Approve
+                                            </a>
+ 
+                                            <a asp-action="RejectAppointment"
+                                                   asp-route-id="@item.AppointmentId"
+                                                   class="btn btn-danger btn-sm px-3">
+                                                ✖ Reject
+                                            </a>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">No actions</span>
+                                    }
+                                </td>
+                          
+                            <td>
+                                @item.ScheduleStatus
                             </td>
 
                         </tr>

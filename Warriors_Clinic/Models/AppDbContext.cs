@@ -109,7 +109,7 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.Drug).WithMany(p => p.PurchaseOrderLines).HasConstraintName("FK__PurchaseO__DrugI__6E01572D");
 
-            entity.HasOne(d => d.Po).WithMany(p => p.PurchaseOrderLines).HasConstraintName("FK__PurchaseOr__POId__6D0D32F4");
+            entity.HasOne(d => d.PurchaseOrderHeader).WithMany(p => p.PurchaseOrderLines).HasConstraintName("FK__PurchaseOr__POId__6D0D32F4");
         });
 
         modelBuilder.Entity<Schedule>(entity =>
