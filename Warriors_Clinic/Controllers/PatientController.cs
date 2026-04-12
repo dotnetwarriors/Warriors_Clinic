@@ -64,5 +64,88 @@ namespace Warriors_Clinic.Controllers
             return View(data);
         }
 
+        public IActionResult Profile()
+        {
+            var email = HttpContext.Session.GetString("UserName");
+
+            if (string.IsNullOrEmpty(email))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var user = _context.Users
+                .FirstOrDefault(u => u.Email == email);
+
+            if (user == null)
+            {
+                return Content("User not found");
+            }
+
+            if (user.ReferenceToId == null)
+            {
+                return Content("User not linked to Patient");
+            }
+
+            var patient = _context.Patients
+                .FirstOrDefault(p => p.PatientId == user.ReferenceToId);
+
+            if (patient == null)
+            {
+                return Content("Patient record not found");
+            }
+
+            return View(patient);
+        }
+
+        public IActionResult EditProfile()
+        {
+            var email = HttpContext.Session.GetString("UserName");
+
+            if (string.IsNullOrEmpty(email))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var user = _context.Users
+                .FirstOrDefault(u => u.Email == email);
+
+            if (user == null)
+            {
+                return Content("User not found");
+            }
+
+            if (user.ReferenceToId == null)
+            {
+                return Content("User not linked to Patient");
+            }
+
+            var patient = _context.Patients
+                .FirstOrDefault(p => p.PatientId == user.ReferenceToId);
+
+            if (patient == null)
+            {
+                return Content("Patient not found");
+            }
+
+            return View(patient);
+        }
+
+        [HttpPost]
+        public IActionResult EditProfile(Patient model)
+        {
+            var patient = _context.Patients.Find(model.PatientId);
+
+            if (patient != null)
+            {
+                patient.Name = model.Name;
+                patient.Phone = model.Phone;
+                patient.Address = model.Address;
+                patient.Email = model.Email;
+
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("Profile");
+        }
     }
 }
