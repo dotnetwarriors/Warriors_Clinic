@@ -38,6 +38,9 @@ namespace Warriors_Clinic.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(50)");
 
+                    b.Property<bool>("IsVisibleToDoctor")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Note")
                         .HasMaxLength(255)
                         .IsUnicode(false)
@@ -154,6 +157,9 @@ namespace Warriors_Clinic.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DrugRequestId"));
 
+                    b.Property<int?>("ChemistId")
+                        .HasColumnType("int");
+
                     b.Property<string>("DrugInfoText")
                         .HasMaxLength(255)
                         .IsUnicode(false)
@@ -177,6 +183,8 @@ namespace Warriors_Clinic.Migrations
 
                     b.HasKey("DrugRequestId")
                         .HasName("PK__DrugRequ__AEE9D630B65886DB");
+
+                    b.HasIndex("ChemistId");
 
                     b.HasIndex("PhysicianId");
 
@@ -327,13 +335,11 @@ namespace Warriors_Clinic.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("ScheduleId")
+                    b.Property<int>("PatientId")
                         .HasColumnType("int");
 
                     b.HasKey("PhysicianAdviceId")
                         .HasName("PK__Physicia__82C625F0D3DA4DB3");
-
-                    b.HasIndex("ScheduleId");
 
                     b.ToTable("PhysicianAdvice");
                 });
@@ -378,21 +384,20 @@ namespace Warriors_Clinic.Migrations
                 {
                     b.Property<int>("Poid")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("POId");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Poid"));
 
+                    b.Property<bool>("IsVisible")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime?>("Podate")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasColumnName("PODate")
+                        .HasColumnType("datetime2")
                         .HasDefaultValueSql("(getdate())");
 
                     b.Property<string>("Status")
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("SupplierId")
                         .HasColumnType("int");
@@ -409,8 +414,7 @@ namespace Warriors_Clinic.Migrations
                 {
                     b.Property<int>("PolineId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("POLineId");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PolineId"));
 
@@ -418,13 +422,10 @@ namespace Warriors_Clinic.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Note")
-                        .HasMaxLength(255)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("Poid")
-                        .HasColumnType("int")
-                        .HasColumnName("POId");
+                        .HasColumnType("int");
 
                     b.Property<int?>("Quantity")
                         .HasColumnType("int");
@@ -456,10 +457,10 @@ namespace Warriors_Clinic.Migrations
                     b.Property<DateTime?>("ScheduleDate")
                         .HasColumnType("datetime");
 
-                    b.Property<string>("ScheduleStatus")
+                    b.Property<int>("ScheduleStatus")
                         .HasMaxLength(50)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("int");
 
                     b.HasKey("ScheduleId")
                         .HasName("PK__Schedule__9C8A5B495BE3D830");
@@ -569,10 +570,16 @@ namespace Warriors_Clinic.Migrations
 
             modelBuilder.Entity("Warriors_Clinic.Models.DrugRequest", b =>
                 {
+                    b.HasOne("Warriors_Clinic.Models.Chemist", "Chemist")
+                        .WithMany()
+                        .HasForeignKey("ChemistId");
+
                     b.HasOne("Warriors_Clinic.Models.Physician", "Physician")
                         .WithMany("DrugRequests")
                         .HasForeignKey("PhysicianId")
                         .HasConstraintName("FK__DrugReque__Physi__66603565");
+
+                    b.Navigation("Chemist");
 
                     b.Navigation("Physician");
                 });
@@ -592,18 +599,6 @@ namespace Warriors_Clinic.Migrations
                     b.Navigation("Receiver");
 
                     b.Navigation("Sender");
-                });
-
-            modelBuilder.Entity("Warriors_Clinic.Models.PhysicianAdvice", b =>
-                {
-                    b.HasOne("Warriors_Clinic.Models.Schedule", "Schedule")
-                        .WithMany("PhysicianAdvices")
-                        .HasForeignKey("ScheduleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK__Physician__Sched__5EBF139D");
-
-                    b.Navigation("Schedule");
                 });
 
             modelBuilder.Entity("Warriors_Clinic.Models.PhysicianPrescription", b =>
@@ -640,14 +635,14 @@ namespace Warriors_Clinic.Migrations
                         .HasForeignKey("DrugId")
                         .HasConstraintName("FK__PurchaseO__DrugI__6E01572D");
 
-                    b.HasOne("Warriors_Clinic.Models.PurchaseOrderHeader", "Po")
+                    b.HasOne("Warriors_Clinic.Models.PurchaseOrderHeader", "PurchaseOrderHeader")
                         .WithMany("PurchaseOrderLines")
                         .HasForeignKey("Poid")
-                        .HasConstraintName("FK__PurchaseOr__POId__6D0D32F4");
+                        .HasConstraintName("FK__PurchaseOr__Poid__6D0D32F4");
 
                     b.Navigation("Drug");
 
-                    b.Navigation("Po");
+                    b.Navigation("PurchaseOrderHeader");
                 });
 
             modelBuilder.Entity("Warriors_Clinic.Models.Schedule", b =>
@@ -692,11 +687,6 @@ namespace Warriors_Clinic.Migrations
             modelBuilder.Entity("Warriors_Clinic.Models.PurchaseOrderHeader", b =>
                 {
                     b.Navigation("PurchaseOrderLines");
-                });
-
-            modelBuilder.Entity("Warriors_Clinic.Models.Schedule", b =>
-                {
-                    b.Navigation("PhysicianAdvices");
                 });
 
             modelBuilder.Entity("Warriors_Clinic.Models.Supplier", b =>

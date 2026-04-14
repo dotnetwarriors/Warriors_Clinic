@@ -1,0 +1,35 @@
+﻿@model List<Warriors_Clinic.Models.PurchaseOrderHeader>
+@{
+    ViewData["Title"] = "AcceptedOrders";
+    Layout = "~/Views/Shared/_PatientLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <h2 class="fw-bold mb-4 text-success">Rejected Orders</h2>
+ 
+    @foreach (var order in Model)
+    {
+        <div class="card shadow-sm mb-4 p-3">
+ 
+            <div class="d-flex justify-content-between">
+                <h5>Order ID: @order.Poid</h5>
+ 
+                <a asp-action="Hide" asp-route-id="@order.Poid"
+                   class="btn btn-secondary btn-sm">Remove</a>
+            </div>
+ 
+            <hr />
+ 
+            <table class="table">
+                @foreach (var line in order.PurchaseOrderLines)
+                {
+                    <tr>
+                        <td>@line.Drug?.Tittle</td>
+                        <td>@line.Quantity</td>
+                    </tr>
+                }
+            </table>
+        </div>
+    }
+</div>
+

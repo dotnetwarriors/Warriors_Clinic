@@ -167,14 +167,14 @@ namespace Warriors_Clinic.Migrations
                 name: "PurchaseOrderHeader",
                 columns: table => new
                 {
-                    POId = table.Column<int>(type: "int", nullable: false)
+                    Poid = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PODate = table.Column<DateTime>(type: "datetime", nullable: true, defaultValueSql: "(getdate())"),
                     SupplierId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Purchase__5F02A2D45CDE26B8", x => x.POId);
+                    table.PrimaryKey("PK__Purchase__5F02A2D45CDE26B8", x => x.Poid);
                     table.ForeignKey(
                         name: "FK__PurchaseO__Suppl__6A30C649",
                         column: x => x.SupplierId,
@@ -234,7 +234,7 @@ namespace Warriors_Clinic.Migrations
                 {
                     POLineId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    POId = table.Column<int>(type: "int", nullable: true),
+                    Poid = table.Column<int>(type: "int", nullable: true),
                     DrugId = table.Column<int>(type: "int", nullable: true),
                     Quantity = table.Column<int>(type: "int", nullable: true),
                     Note = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: true)
@@ -248,10 +248,10 @@ namespace Warriors_Clinic.Migrations
                         principalTable: "Drugs",
                         principalColumn: "DrugID");
                     table.ForeignKey(
-                        name: "FK__PurchaseOr__POId__6D0D32F4",
-                        column: x => x.POId,
+                        name: "FK__PurchaseOr__Poid__6D0D32F4",
+                        column: x => x.Poid,
                         principalTable: "PurchaseOrderHeader",
-                        principalColumn: "POId");
+                        principalColumn: "Poid");
                 });
 
             migrationBuilder.CreateTable(
@@ -349,9 +349,9 @@ namespace Warriors_Clinic.Migrations
                 column: "DrugId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PurchaseOrderLine_POId",
+                name: "IX_PurchaseOrderLine_Poid",
                 table: "PurchaseOrderLine",
-                column: "POId");
+                column: "Poid");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Schedule_AppointmentId",

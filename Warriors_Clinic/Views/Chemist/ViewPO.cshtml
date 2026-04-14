@@ -1,51 +1,84 @@
 ﻿@model List<Warriors_Clinic.Models.PurchaseOrderHeader>
-
+ 
 @{
     ViewData["Title"] = "ViewPO";
-    Layout = "~/Views/Shared/_ChemistLayout.cshtml";
+    Layout = "~/Views/Shared/_SupplierLayout.cshtml";
 }
-
  
-<h2>Purchase Orders</h2>
+<h2 class="mb-3">Pending Purchase Orders</h2>
  
-<a href="/Chemist/CreatePO" class="btn btn-primary mb-3">+ New Order</a>
+<style>
+    .details-box {
+        display: none;
+    }
+</style>
  
-@foreach (var po in Model.Where(p => p.Status != "Deleted"))
+@foreach (var po in Model)
 {
     <div class="card mb-3 p-3 shadow-sm">
  
-        <h5>
-            PO ID: @po.Poid | Supplier: @po.Supplier?.Name
-            <span class="badge bg-warning text-dark">@po.Status</span>
-        </h5>
+        <!-- HEADER -->
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h5>Order ID: @po.Poid</h5>
+                <small>Date: @po.Podate</small>
+            </div>
  
-        <table class="table table-hover align-middle">
-            <thead class="table-dark">
-                <tr>
-                    <th>Drug</th>
-                    <th>Quantity</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                @foreach (var line in po.PurchaseOrderLines)
-                {
+            <div>
+                <a href="/Supplier/ApprovePO/@po.Poid"
+                   class="btn btn-success btn-sm">✔ Accept</a>
+ 
+                <a href="/Supplier/RejectPO/@po.Poid"
+                   class="btn btn-danger btn-sm">✖ Reject</a>
+            </div>
+        </div>
+ 
+        <!-- VIEW MORE BUTTON -->
+        <button type="button"
+                class="btn btn-outline-primary btn-sm mt-2"
+                onclick="toggleDetails(@po.Poid, this)">
+            View More
+        </button>
+ 
+        <!-- HIDDEN DETAILS -->
+        <div id="details-@po.Poid" style="display:none;" class"mt-2">
+ 
+            <table class="table table-bordered">
+                <thead class="table-light">
                     <tr>
-                        <td>@line.Drug?.Tittle</td>
-                        <td>@line.Quantity</td>
+                        <th>Drug</th>
+                        <th>Quantity</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
  
-        <!-- ACTION -->
-        @if (po.Status?.Equals("Approved")== true)
-        {
-            <a asp-action="DeletePO"
-               asp-route-id="@po.Poid"
-               class="btn btn-danger btn-sm">Delete</a>
-        }
+                <tbody>
+                    @foreach (var line in po.PurchaseOrderLines)
+                    {
+                        <tr>
+                            <td>@line.Drug?.Tittle</td>
+                            <td>@line.Quantity</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+ 
+        </div>
  
     </div>
 }
-  
+<script>
+    function toggleDetails(id, btn) {
+        var div = document.getElementById("details-" + id);
+ 
+        if (!div) return;
+ 
+        if (div.style.display === "none") {
+            div.style.display = "block";
+            btn.innerText = "View Less";
+        } else {
+            div.style.display = "none";
+            btn.innerText = "View More";
+        }
+    }
+</script>
+ 

@@ -15,10 +15,14 @@ namespace Warriors_Clinic.Models
 
         public int? SupplierId { get; set; }
 
-        public string? Status { get; set; }
+        public string? Status { get; set; } = "Pending";
 
         // Navigation
         public virtual Supplier? Supplier { get; set; }
+
+        public bool IsVisible { get; set; } = true;
+
+       
 
         public virtual ICollection<PurchaseOrderLine> PurchaseOrderLines { get; set; }
             = new List<PurchaseOrderLine>();

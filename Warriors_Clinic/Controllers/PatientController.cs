@@ -17,7 +17,7 @@ namespace Warriors_Clinic.Controllers
         public IActionResult Dashboard()
         {
             // ✅ Get session email
-            var email = HttpContext.Session.GetString("UserName");
+            var email = HttpContext.Session.GetString("UserEmail");
 
             // ✅ FIX 1: Session check (MANDATORY)
             if (string.IsNullOrEmpty(email))
@@ -40,7 +40,7 @@ namespace Warriors_Clinic.Controllers
 
         public IActionResult ViewPrescription()
         {
-            var email = HttpContext.Session.GetString("UserName");
+            var email = HttpContext.Session.GetString("UserEmail");
 
             if (string.IsNullOrEmpty(email))
             {
@@ -66,7 +66,7 @@ namespace Warriors_Clinic.Controllers
 
         public IActionResult Profile()
         {
-            var email = HttpContext.Session.GetString("UserName");
+            var email = HttpContext.Session.GetString("UserEmail");
 
             if (string.IsNullOrEmpty(email))
             {
@@ -99,7 +99,7 @@ namespace Warriors_Clinic.Controllers
 
         public IActionResult EditProfile()
         {
-            var email = HttpContext.Session.GetString("UserName");
+            var email = HttpContext.Session.GetString("UserEmail");
 
             if (string.IsNullOrEmpty(email))
             {
