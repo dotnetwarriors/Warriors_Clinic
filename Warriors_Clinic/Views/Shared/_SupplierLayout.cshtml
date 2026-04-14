@@ -1,68 +1,100 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title - Supplier Panel</title>
+    <meta charset="utf-8" />
+    <title>Supplier Panel</title>
 
-    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-
-    <style>
-            .navbar-brand {
-                font-size: 1.3rem;
-            }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 
-<body>
+<body class="bg-light">
 
     @{
-        var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
-        var userName = Context.Session.GetString("UserName");
+        var current = Context.Request.Path.ToString().ToLower();
     }
 
-    <!-- 🔵 NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm fixed-top">
-        <div class="container-fluid">
+    <div class="d-flex">
 
-            <!-- LEFT -->
-            <a class="navbar-brand fw-bold" href="#">📦 Supplier Panel</a>
+        <!-- 🔵 SIDEBAR -->
+        <div class="bg-dark text-white p-3 position-fixed"
+             style="width:250px; top:70px; bottom:0;">
 
-            <!-- RIGHT -->
-            <div class="d-flex align-items-center">
+            <h4 class="text-center mb-4">📦 Supplier</h4>
 
-                @* SHOW WELCOME ONLY IN DASHBOARD *@
-                @if (currentAction == "Dashboard")
-                {
-                    <span class="badge bg-light text-dark me-3 p-2">
-                        👋 Welcome @userName
-                    </span>
-                }
+            <ul class="nav flex-column">
 
-                @* SHOW DASHBOARD BUTTON ONLY WHEN NOT IN DASHBOARD *@
-                @if (currentAction != "Dashboard")
-                {
-                    <a class="btn btn-outline-light me-2" href="/Supplier/Dashboard">
-                        📊 Dashboard
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white @(current.Contains("dashboard") ? "bg-primary rounded" : "")"
+                           asp-controller="Supplier" asp-action="Dashboard">
+                        <i class="bi bi-speedometer2"></i> Dashboard
                     </a>
-                }
+                </li>
 
-                <a class="btn btn-danger ms-2" href="/Account/Logout">
-                    Logout
-                </a>
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white @(current.Contains("viewpo") ? "bg-primary rounded" : "")"
+                           asp-controller="Supplier" asp-action="ViewPO">
+                        <i class="bi bi-cart"></i> Purchase Orders
+                    </a>
+                </li>
 
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white @(current.Contains("accepted") ? "bg-primary rounded" : "")"
+                           asp-controller="Supplier" asp-action="AcceptedOrders">
+                        <i class="bi bi-check-circle"></i> Accepted
+                    </a>
+                </li>
+
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white @(current.Contains("rejected") ? "bg-primary rounded" : "")"
+                           asp-controller="Supplier" asp-action="RejectedOrders">
+                        <i class="bi bi-x-circle"></i> Rejected
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+
+        <!-- 🔷 MAIN -->
+        <div class="flex-grow-1 d-flex flex-column"
+             style="margin-left:250px; margin-top:70px; min-height:100vh;">
+
+            <!-- 🔷 TOP BAR -->
+            <nav class="navbar navbar-light bg-white shadow-sm px-4 d-flex justify-content-between fixed-top"
+                 style="height:70px;">
+
+                <span class="navbar-brand mb-0 h5">Supplier Dashboard</span>
+
+                <div class="d-flex align-items-center gap-3">
+
+                    <span class="fw-semibold">
+                        👤 @Context.Session.GetString("UserName")
+                    </span>
+
+                    <small class="text-muted">
+                        @Context.Session.GetString("UserEmail")
+                    </small>
+
+                    <a asp-controller="Account" asp-action="Logout"
+                           class="btn btn-outline-danger btn-sm">
+                        Logout
+                    </a>
+
+                </div>
+
+            </nav>
+
+            <!-- 🔷 CONTENT -->
+            <div class="p-4">
+                @RenderBody()
             </div>
 
         </div>
-    </nav>
 
-    <!-- 🔷 MAIN CONTENT -->
-    <div class="container mt-4">
-        @RenderBody()
     </div>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     @await Html.PartialAsync("_Footer")
+
 </body>
 </html>
