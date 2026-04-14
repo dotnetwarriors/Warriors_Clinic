@@ -1,6 +1,11 @@
 ﻿@{
     Layout = "~/Views/Shared/_PatientLayout.cshtml";
 }
+@{
+    var email = Context.Session.GetString("UserEmail");
+    var displayName = string.IsNullOrEmpty(email) ? "User" : email.Split('@')[0];
+}
+ 
 
 <style>
     .hover-card {
@@ -16,7 +21,7 @@
 <div class="container-fluid">
 
     <h2 class="mb-4 fw-bold">
-        Welcome, @ViewBag.Name 👋
+        Welcome, @displayName 👋
     </h2>
 
     <div class="row g-4">

@@ -42,7 +42,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link px-3" asp-controller="Drug" asp-action="Index">Drugs</a>
+                        <a class="nav-link px-3" asp-controller="Drug" asp-action="Index">Drugs Info</a>
                     </li>
 
                     @{
@@ -51,8 +51,8 @@
 
                     @if (userName == null)
                     {
-                        <li class="nav-item ms-3">
-                            <a asp-controller="Account" asp-action="Login" class="btn btn-outline-primary px-4">
+                        <li class="nav-item ms-2">
+                            <a asp-controller="Account" asp-action="Login" class="btn btn-primary px-4">
                                 Login
                             </a>
                         </li>
@@ -84,7 +84,6 @@
 
    
    
-    <div class="container my-5">
         @RenderBody()
 
 

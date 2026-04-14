@@ -2,11 +2,13 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f8f9fa;
+    padding-top: 80px; /* navbar space */
 }
 
 /* 🔥 HERO SECTION */
 .hero-section {
     height: 100vh;
+    padding-top: 40px;
     width: 100%;
     display: flex;
     align-items: center;
@@ -74,4 +76,5 @@ footer {
     color: #fff;
     text-align: center;
     padding: 15px;
+    position: relative; /* ✅ NOT fixed */
 }

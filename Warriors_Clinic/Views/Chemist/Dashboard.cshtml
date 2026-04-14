@@ -1,6 +1,10 @@
 ﻿@{
     Layout = "~/Views/Shared/_ChemistLayout.cshtml";
 }
+@{
+    var email = Context.Session.GetString("UserEmail");
+    var displayName = string.IsNullOrEmpty(email) ? "User" : email.Split('@')[0];
+}
 
 <style>
     .hover-card {
@@ -16,7 +20,7 @@
 <div class="container-fluid">
 
     <h2 class="mb-4 fw-bold">
-        Welcome, @Context.Session.GetString("UserName") 👋
+        Welcome, @displayName 👋
     </h2>
 
     <div class="row g-4">

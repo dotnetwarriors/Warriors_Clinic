@@ -1,6 +1,11 @@
 ﻿@{
    Layout = "~/Views/Shared/_PhysicianLayout.cshtml";
 }
+
+@{
+    var email = Context.Session.GetString("UserEmail");
+    var displayName = string.IsNullOrEmpty(email) ? "User" : email.Split('@')[0];
+}
 <head>
 <style>
     .card:hover {
@@ -13,7 +18,7 @@
 <div class="container-fluid">
 
     <h2 class="mb-4 fw-bold">
-        Welcome Dr. @Context.Session.GetString("UserName") 👨‍⚕️
+        Welcome, @displayName 👋
     </h2>
 
     <div class="row g-4">
