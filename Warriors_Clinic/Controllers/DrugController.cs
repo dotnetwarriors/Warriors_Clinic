@@ -18,6 +18,12 @@ namespace Warriors_Clinic.Controllers
             _context = context;
         }
 
+        private bool IsChemist()
+        {
+            var role = HttpContext.Session.GetString("UserRole");
+            return role != null && role == "Chemist";
+        }
+
         // GET: Drugs
         public async Task<IActionResult> Index()
         {
@@ -45,6 +51,9 @@ namespace Warriors_Clinic.Controllers
         // GET: Drugs/Create
         public IActionResult Create()
         {
+            if (!IsChemist())
+                return RedirectToAction("Index");
+
             return View();
         }
 
@@ -55,6 +64,8 @@ namespace Warriors_Clinic.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("DrugId,Tittle,Description,Expiry,Dosage")] Drug drug)
         {
+            if (!IsChemist())
+                return RedirectToAction("Index");
             if (ModelState.IsValid)
             {
                 _context.Add(drug);
@@ -67,16 +78,16 @@ namespace Warriors_Clinic.Controllers
         // GET: Drugs/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!IsChemist())
+                return RedirectToAction("Index");
+
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var drug = await _context.Drugs.FindAsync(id);
             if (drug == null)
-            {
                 return NotFound();
-            }
+
             return View(drug);
         }
 
@@ -87,6 +98,8 @@ namespace Warriors_Clinic.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("DrugId,Tittle,Description,Expiry,Dosage")] Drug drug)
         {
+            if (!IsChemist())
+                return RedirectToAction("Index");
             if (id != drug.DrugId)
             {
                 return NotFound();
@@ -118,6 +131,9 @@ namespace Warriors_Clinic.Controllers
         // GET: Drugs/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!IsChemist())
+                return RedirectToAction("Index");
+
             if (id == null)
             {
                 return NotFound();
@@ -138,6 +154,8 @@ namespace Warriors_Clinic.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (!IsChemist())
+                return RedirectToAction("Index");
             var drug = await _context.Drugs.FindAsync(id);
             if (drug != null)
             {

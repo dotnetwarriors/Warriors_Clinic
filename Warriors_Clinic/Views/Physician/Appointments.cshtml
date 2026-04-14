@@ -1,12 +1,12 @@
 ﻿@model IEnumerable<Warriors_Clinic.Models.Appointment>
- 
+
 @{
     ViewData["Title"] = "Appointments";
     Layout = "~/Views/Shared/_PhysicianLayout.cshtml";
 }
- 
+
 <h2 class="mb-4">👨‍⚕️ Approved Appointments</h2>
- 
+
 <table class="table table-bordered table-hover shadow">
     <thead class="table-dark">
         <tr>
@@ -16,23 +16,23 @@
             <th>Date & Time</th>
             <th>Reason</th>
             <th>Status</th>
-            <th>Action</th>
+            <th>Actions</th>
         </tr>
     </thead>
- 
+
     <tbody>
         @foreach (var item in Model)
         {
             <tr>
-                <!-- ✅ Patient Info -->
+                <!-- Patient Info -->
                 <td>@item.Patient?.Name</td>
                 <td>@item.Patient?.Phone</td>
                 <td>@item.Patient?.Address</td>
- 
+
                 <!-- Appointment Info -->
                 <td>@item.AppointmentDateTime</td>
                 <td>@item.Reason</td>
- 
+
                 <!-- Status -->
                 <td>
                     @if (item.ScheduleStatus == "Approved")
@@ -44,9 +44,10 @@
                         <span class="badge bg-info">Consulted</span>
                     }
                 </td>
- 
-                <!-- Action -->
+
+                <!-- Actions -->
                 <td>
+
                     @if (item.ScheduleStatus == "Approved")
                     {
                         <a asp-action="Consulted"
@@ -60,13 +61,22 @@
                         <button class="btn btn-secondary btn-sm" disabled>
                             Consulted
                         </button>
- 
+
                         <a asp-action="HideFromDashboard"
                                asp-route-id="@item.AppointmentId"
                                class="btn btn-danger btn-sm">
                             Delete
                         </a>
                     }
+
+                    <!-- ✅ CHAT BUTTON (FIXED) -->
+                    <a asp-controller="Chat"
+                           asp-action="Index"
+                           asp-route-receiverId="@item.Patient.PatientId"
+                           class="btn btn-primary btn-sm">
+                        Chat
+                    </a>
+
                 </td>
             </tr>
         }

@@ -43,9 +43,10 @@ namespace Warriors_Clinic.Controllers
 
             var data = _context.Appointments
                 .Where(a => a.PhysicianId == physician.PhysicianId
-                     && ( a.ScheduleStatus == "Approved" || a.ScheduleStatus == "Consulted")
-                     && a.IsVisibleToDoctor == true)        
-                .Include(a => a.Patient)   // ✅ VERY IMPORTANT
+                     && (a.ScheduleStatus == "Approved" || a.ScheduleStatus == "Consulted")
+                     && a.IsVisibleToDoctor == true)
+                .Include(a => a.Patient)     // ✅ needed
+                .Include(a => a.Physician)   // ✅ optional (safe)
                 .ToList();
 
             return View(data);

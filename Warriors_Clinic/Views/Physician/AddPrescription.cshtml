@@ -1,7 +1,9 @@
 ﻿@{
     ViewBag.Title = "Add Prescription";
 }
- 
+@{
+    Layout = "~/Views/Shared/_PhysicianLayout.cshtml";
+}
 <h2>Add Prescription</h2>
  
 <form asp-action="AddPrescription" asp-controller="Physician" method="post">

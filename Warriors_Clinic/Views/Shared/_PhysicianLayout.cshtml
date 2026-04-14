@@ -1,84 +1,106 @@
-﻿<!DOCTYPE html>
-<html>
+﻿@{
+    var current = Context.Request.Path.ToString().ToLower();
+}
+
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="utf-8" />
     <title>Physician Panel</title>
- 
+
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
- 
-    <style>
-            body {
-                background-color: #f5f7fa;
-            }
-            .navbar {
-                background-color: #0d6efd;
-            }
-            .navbar-brand, .nav-link, .navbar-text {
-                color: white !important;
-            }
-            footer {
-                background-color: #212529;
-                color: white;
-                text-align: center;
-                padding: 10px;
-                margin-top: 30px;
-            }
-    </style>
+
+    <!-- Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 </head>
- 
-<body>
- 
-    <!-- 🔵 HEADER / NAVBAR -->
-    <nav class="navbar navbar-expand-lg">
-        <div class="container-fluid">
- 
-            <!-- Logo -->
-            <a class="navbar-brand fw-bold" href="#">🏥 Warriors Clinic</a>
- 
-            <!-- Menu -->
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav me-auto">
- 
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="Physician" asp-action="Dashboard">Dashboard</a>
-                    </li>
- 
-                    <li class="nav-item">
-                        <a class="nav-link" href="ClinicInfo">About Clinic</a>
-                    </li>
- 
-                    <li class="nav-item">
-                        <a class="nav-link" href="Drug">Drugs Info</a>
-                    </li>
- 
-                </ul>
- 
-                <!-- User Info -->
-                <span class="navbar-text me-3">
-                    👤 @Context.Session.GetString("UserName")
-                </span>
- 
-                <!-- Logout -->
-                <a asp-controller="Account" asp-action="Logout" class="btn btn-danger btn-sm">
-                    Logout
-                </a>
-            </div>
+
+<body class="bg-light">
+
+    <div class="d-flex">
+
+        <!-- 🔵 SIDEBAR -->
+        <div class="bg-dark text-white p-3 position-fixed"
+             style="width:250px; top:70px; bottom:0;">
+
+            <h4 class="text-center mb-4">🏥 Clinic</h4>
+
+            <ul class="nav flex-column">
+
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white @(current.Contains("dashboard") ? "bg-primary rounded" : "")"
+                           asp-controller="Physician" asp-action="Dashboard">
+                        <i class="bi bi-speedometer2"></i> Dashboard
+                    </a>
+                </li>
+
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white @(current.Contains("appointments") ? "bg-primary rounded" : "")"
+                           asp-controller="Physician" asp-action="Appointments">
+                        <i class="bi bi-calendar-check"></i> Appointments
+                    </a>
+                </li>
+
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white @(current.Contains("prescriptions") ? "bg-primary rounded" : "")"
+                           asp-controller="Physician" asp-action="Prescriptions">
+                        <i class="bi bi-file-medical"></i> Prescriptions
+                    </a>
+                </li>
+
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white @(current.Contains("drugrequests") ? "bg-primary rounded" : "")"
+                           asp-controller="Physician" asp-action="DrugRequests">
+                        <i class="bi bi-capsule"></i> Drug Requests
+                    </a>
+                </li>
+
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white @(current.Contains("chat") ? "bg-primary rounded" : "")"
+                           asp-controller="Chat" asp-action="Index">
+                        <i class="bi bi-chat-dots"></i> Chat
+                    </a>
+                </li>
+
+            </ul>
         </div>
-    </nav>
- 
-    <!-- 🔷 BODY -->
-    <div class="container mt-4">
-        @RenderBody()
+
+        <!-- 🔷 MAIN CONTENT -->
+        <div class="flex-grow-1 d-flex flex-column"
+             style="margin-left:250px; margin-top:70px; min-height:100vh;">
+
+
+            <!-- 🔷 TOP BAR -->
+            <nav class="navbar navbar-light bg-white shadow-sm px-4 d-flex justify-content-between fixed-top"
+                 style="height:70px;">
+
+                <span class="navbar-brand mb-0 h5">Physician Dashboard</span>
+
+                <div class="d-flex align-items-center gap-3">
+
+                    <span class="fw-semibold">
+                        👤 @Context.Session.GetString("UserName")
+                    </span>
+
+                    <a asp-controller="Account" asp-action="Logout" class="btn btn-outline-danger btn-sm">
+                        <i class="bi bi-box-arrow-right"></i> Logout
+                    </a>
+
+                </div>
+
+            </nav>
+
+            <!-- 🔷 PAGE CONTENT -->
+            <div class="p-4 flex-grow-1">
+                @RenderBody()
+            </div>
+
+        </div>
+
     </div>
- 
-    <!-- ⚫ FOOTER -->
-    <footer>
-        © 2026 Warriors Clinic | Physician Panel
-    </footer>
- 
+
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
- 
+    @await Html.PartialAsync("_Footer")
 </body>
 </html>

@@ -1,45 +1,68 @@
 ﻿@{
-    Layout = "~/Views/Shared/_PhysicianLayout.cshtml";
+   Layout = "~/Views/Shared/_PhysicianLayout.cshtml";
 }
- 
-<h2 class="mb-4">Welcome Dr. @ViewBag.Name 👨‍⚕️</h2>
- 
-<div class="row">
- 
-    <!-- Appointments -->
-    <div class="col-md-3">
-        <div class="card text-white bg-primary shadow">
-            <div class="card-body text-center">
-                <a asp-controller="Physician" asp-action="Appointments" class="btn btn-light mt-2">View Appointments </a>
-            </div>
+<head>
+<style>
+    .card:hover {
+        transform: translateY(-5px);
+        transition: 0.3s;
+    }
+</style>
+</head>
+
+<div class="container-fluid">
+
+    <h2 class="mb-4 fw-bold">
+        Welcome Dr. @Context.Session.GetString("UserName") 👨‍⚕️
+    </h2>
+
+    <div class="row g-4">
+
+        <!-- APPOINTMENTS -->
+        <div class="col-md-3">
+            <a asp-action="Appointments" class="text-decoration-none">
+                <div class="card shadow-sm text-center p-4 border-0">
+                    <i class="bi bi-calendar-check display-5 text-primary mb-3"></i>
+                    <h5 class="fw-semibold">Appointments</h5>
+                    <p class="text-muted small">View and manage appointments</p>
+                </div>
+            </a>
         </div>
-    </div>
- 
-    <!-- Prescriptions -->
-    <div class="col-md-3">
-        <div class="card text-white bg-success shadow">
-            <div class="card-body text-center">
-                <a asp-action="Prescriptions" class="btn btn-light mt-2">Prescription</a>
-            </div>
+
+        <!-- PRESCRIPTIONS -->
+        <div class="col-md-3">
+            <a asp-action="Prescriptions" class="text-decoration-none">
+                <div class="card shadow-sm text-center p-4 border-0">
+                    <i class="bi bi-file-medical display-5 text-success mb-3"></i>
+                    <h5 class="fw-semibold">Prescriptions</h5>
+                    <p class="text-muted small">Create and manage prescriptions</p>
+                </div>
+            </a>
         </div>
-    </div>
- 
-    <!-- Chat -->
-    <div class="col-md-3">
-        <div class="card text-white bg-warning shadow">
-            <div class="card-body text-center">
-                <a asp-action="Physician" class="btn btn-light">Chat Box</a>
-            </div>
+
+  
+        <!-- CHAT -->
+        <div class="col-md-3">
+            <a asp-action="Appointments" class="text-decoration-none">
+                <div class="card shadow-sm text-center p-4 border-0">
+                    <i class="bi bi-chat-dots display-5 text-warning mb-3"></i>
+                    <h5 class="fw-semibold">Chat Box</h5>
+                    <p class="text-muted small">Chat via appointments</p>
+                </div>
+            </a>
         </div>
-    </div>
- 
-    <!-- Drug Requests -->
-    <div class="col-md-3">
-        <div class="card text-white bg-danger shadow">
-            <div class="card-body text-center">
-                <a asp-action="DrugRequests" class="btn btn-light">Drug Requests</a>
-            </div>
+
+        <!-- DRUG REQUEST -->
+        <div class="col-md-3">
+            <a asp-action="DrugRequests" class="text-decoration-none">
+                <div class="card shadow-sm text-center p-4 border-0">
+                    <i class="bi bi-capsule display-5 text-danger mb-3"></i>
+                    <h5 class="fw-semibold">Drug Requests</h5>
+                    <p class="text-muted small">Request medicines from chemist</p>
+                </div>
+            </a>
         </div>
+
     </div>
- 
+
 </div>

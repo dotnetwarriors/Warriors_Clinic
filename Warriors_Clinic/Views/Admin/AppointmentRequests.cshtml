@@ -40,29 +40,9 @@
                             <!-- DOCTOR -->
                             <td>@item.Physician?.Name</td>
 
-                            <!-- DATE + RESCHEDULE -->
-                            <td style="min-width:220px;">
-                                @if (item.ScheduleStatus == "Pending")
-                                {
-                                    <form asp-action="Reschedule" method="post" class="d-flex gap-2">
-                                        <input type="hidden" name="id" value="@item.AppointmentId" />
-
-                                        <input type="datetime-local"
-                                               name="newDate"
-                                               value="@(item.AppointmentDateTime.HasValue? item.AppointmentDateTime.Value.ToString("yyyy-MM-ddTHH:mm") : "")"
-                                               class="form-control form-control-sm" />
-
-                                        <button type="submit" class="btn btn-warning btn-sm">
-                                            Update
-                                        </button>
-                                    </form>
-                                }
-                                else
-                                {
-                                    <span class="text-muted">
-                                        @item.AppointmentDateTime?.ToString("dd MMM yyyy, hh:mm tt")
-                                    </span>
-                                }
+                            <!-- DATE -->
+                            <td>
+                                @item.AppointmentDateTime?.ToString("dd MMM yyyy, hh:mm tt")
                             </td>
 
                             <!-- REASON -->
@@ -72,50 +52,44 @@
                             <td>
                                 @if (item.ScheduleStatus?.Trim().ToLower() == "approved")
                                 {
-                                    <span class="badge bg-success px-3 py-2">Approved</span>
+                                    <span class="badge bg-success">Approved</span>
                                 }
                                 else if (item.ScheduleStatus?.Trim().ToLower() == "rejected")
                                 {
-                                    <span class="badge bg-danger px-3 py-2">Rejected</span>
+                                    <span class="badge bg-danger">Rejected</span>
                                 }
                                 else if (item.ScheduleStatus?.Trim().ToLower() == "consulted")
                                 {
-                                    <span class="badge bg-info px-3 py-2">Consulted</span>
+                                    <span class="badge bg-info">Consulted</span>
                                 }
                                 else
                                 {
-                                    <span class="badge bg-warning text-dark px-3 py-2">Pending</span>
+                                    <span class="badge bg-warning text-dark">Pending</span>
                                 }
                             </td>
 
                             <!-- ACTIONS -->
                             <td class="text-center">
-                                <td class="text-center">
-                                    @if (!string.IsNullOrWhiteSpace(item.ScheduleStatus) &&
-                                        item.ScheduleStatus.Trim().Equals("Pending", StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        <div class="d-flex justify-content-center gap-2">
-                                            <a asp-action="ApproveAppointment"
-                                                   asp-route-id="@item.AppointmentId"
-                                                   class="btn btn-success btn-sm px-3">
-                                                ✔ Approve
-                                            </a>
- 
-                                            <a asp-action="RejectAppointment"
-                                                   asp-route-id="@item.AppointmentId"
-                                                   class="btn btn-danger btn-sm px-3">
-                                                ✖ Reject
-                                            </a>
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        <span class="text-muted">No actions</span>
-                                    }
-                                </td>
-                          
-                            <td>
-                                @item.ScheduleStatus
+                                @if (item.ScheduleStatus?.Trim().ToLower() == "pending")
+                                {
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a asp-action="ApproveAppointment"
+                                               asp-route-id="@item.AppointmentId"
+                                               class="btn btn-success btn-sm">
+                                            ✔
+                                        </a>
+
+                                        <a asp-action="RejectAppointment"
+                                               asp-route-id="@item.AppointmentId"
+                                               class="btn btn-danger btn-sm">
+                                            ✖
+                                        </a>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">No actions</span>
+                                }
                             </td>
 
                         </tr>

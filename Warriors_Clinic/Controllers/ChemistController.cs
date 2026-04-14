@@ -161,7 +161,7 @@ namespace Warriors_Clinic.Controllers
                 .OrderByDescending(p => p.Poid)
                 .ToList();
 
-            return View(ViewPO);
+            return View(pos);
 
         }
         public IActionResult DeletePO(int id)

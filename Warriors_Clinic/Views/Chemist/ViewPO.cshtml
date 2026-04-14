@@ -2,9 +2,8 @@
 
 @{
     ViewData["Title"] = "ViewPO";
-    Layout = "~/Views/Shared/_PatientLayout.cshtml";
+    Layout = "~/Views/Shared/_ChemistLayout.cshtml";
 }
-
 
  
 <h2>Purchase Orders</h2>
@@ -20,19 +19,23 @@
             <span class="badge bg-warning text-dark">@po.Status</span>
         </h5>
  
-        <table class="table">
-            <tr>
-                <th>Drug</th>
-                <th>Quantity</th>
-            </tr>
- 
-            @foreach (var line in po.PurchaseOrderLines)
-            {
+        <table class="table table-hover align-middle">
+            <thead class="table-dark">
                 <tr>
-                    <td>@line.Drug?.Tittle</td>
-                    <td>@line.Quantity</td>
+                    <th>Drug</th>
+                    <th>Quantity</th>
                 </tr>
-            }
+            </thead>
+
+            <tbody>
+                @foreach (var line in po.PurchaseOrderLines)
+                {
+                    <tr>
+                        <td>@line.Drug?.Tittle</td>
+                        <td>@line.Quantity</td>
+                    </tr>
+                }
+            </tbody>
         </table>
  
         <!-- ACTION -->

@@ -1,74 +1,53 @@
 ﻿@{
-    ViewData["Title"] = "Admin Dashboard";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<div class="container py-5">
+<style>
+    .card:hover {
+        transform: translateY(-5px);
+        transition: 0.3s;
+    }
+</style>
 
-    <!-- ✅ CENTERED TITLE -->
-    <div class="text-center mb-5">
-        <h2 class="fw-bold">Welcome Admin 👨‍💼</h2>
-    </div>
+<div class="container-fluid">
 
-    <!-- ✅ CENTERED CARDS -->
-    <div class="row justify-content-center g-5 mt-4">
+    <h2 class="mb-4 fw-bold text-center">
+        Welcome Admin 👨‍💼
+    </h2>
 
-        <!-- CARD 1 -->
-        <div class="col-md-6 col-lg-4">
-            <div class="card shadow-lg border-0 p-5 text-center h-100 rounded-4">
+    <div class="row g-4 justify-content-center">
 
-                <h5 class="text-muted mb-3 fs-5">Pending Users</h5>
-
-                <h1 class="fw-bold text-primary mb-4 display-5">
-                    @ViewBag.PendingUsers
-                </h1>
-
-                <a asp-controller="Admin"
-                       asp-action="PendingUsers"
-                       class="btn btn-outline-primary w-100 py-3 fs-5">
-                    Manage
-                </a>
-
-            </div>
+        <!-- Pending Users -->
+        <div class="col-md-4">
+            <a asp-action="PendingUsers" class="text-decoration-none">
+                <div class="card shadow-sm text-center p-4 border-0">
+                    <i class="bi bi-people display-4 text-warning mb-3"></i>
+                    <h5 class="fw-semibold">Pending Users</h5>
+                    <p class="text-muted small">Approve or reject new users</p>
+                </div>
+            </a>
         </div>
 
-        <!-- CARD 2 -->
-        <div class="col-md-6 col-lg-4">
-            <div class="card shadow-lg border-0 p-5 text-center h-100 rounded-4">
-
-                <h5 class="text-muted mb-3 fs-5">Appointments</h5>
-
-                <h1 class="fw-bold text-success mb-4 display-5">
-                    @ViewBag.Appointments
-                </h1>
-
-                <a asp-controller="Admin"
-                       asp-action="AppointmentRequests"
-                       class="btn btn-outline-success w-100 py-3 fs-5">
-                    View
-                </a>
-
-            </div>
+        <!-- Appointments -->
+        <div class="col-md-4">
+            <a asp-action="AppointmentRequests" class="text-decoration-none">
+                <div class="card shadow-sm text-center p-4 border-0">
+                    <i class="bi bi-calendar-check display-4 text-success mb-3"></i>
+                    <h5 class="fw-semibold">Appointments</h5>
+                    <p class="text-muted small">View all clinic appointments</p>
+                </div>
+            </a>
         </div>
 
-        <!-- CARD 3 -->
-        <div class="col-md-6 col-lg-4">
-            <div class="card shadow-lg border-0 p-5 text-center h-100 rounded-4">
-               
-
-                <h5 class="text-muted mb-3 fs-5">Workforce</h5>
-
-                <h1 class="fw-bold text-warning mb-4 display-5">
-                    @ViewBag.Workforce
-                </h1>
-
-                <a asp-controller="Admin"
-                       asp-action="Workforce"
-                       class="btn btn-outline-warning w-100 py-3 fs-5">
-                    Manage
-                </a>
-
-            </div>
+        <!-- Workforce -->
+        <div class="col-md-4">
+            <a asp-action="Workforce" class="text-decoration-none">
+                <div class="card shadow-sm text-center p-4 border-0">
+                    <i class="bi bi-people display-4 text-warning mb-3"></i>
+                    <h5 class="fw-semibold">Workforce</h5>
+                    <p class="text-muted small">Manage doctors & staff</p>
+                </div>
+            </a>
         </div>
 
     </div>

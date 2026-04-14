@@ -38,6 +38,8 @@ public partial class Patient
     [Column(TypeName = "text")]
     public string Summary { get; set; } = null!;
 
+    
+
     [InverseProperty("Patient")]
     public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
 }

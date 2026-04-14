@@ -1,4 +1,7 @@
-﻿@model List<Warriors_Clinic.Models.PurchaseOrderHeader>
+﻿@{
+    Layout = "~/Views/Shared/_ChemistLayout.cshtml";
+}
+@model List<Warriors_Clinic.Models.PurchaseOrderHeader>
  
 <h2>PO List</h2>
  
@@ -8,7 +11,7 @@
  
 <table class="table table-bordered">
  
-    <thead>
+    <thead class="table-dark">
         <tr>
             <th>PO ID</th>
             <th>Supplier</th>

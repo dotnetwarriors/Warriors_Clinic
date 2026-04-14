@@ -1,29 +1,41 @@
 ﻿@model List<Warriors_Clinic.Models.Appointment>
- 
+
 @{
     ViewData["Title"] = "My Appointments";
     Layout = "~/Views/Shared/_PatientLayout.cshtml";
 }
- 
+
 <h2 class="text-center mt-4">My Appointments</h2>
- 
+
 <table class="table table-bordered mt-4">
-    <thead>
+    <thead class="table-dark">
         <tr>
             <th>Doctor</th>
             <th>Date & Time</th>
             <th>Reason</th>
             <th>Status</th>
+            <th>Chat</th>
         </tr>
     </thead>
+
     <tbody>
         @foreach (var item in Model)
         {
             <tr>
-                <td>@item.Physician.Name</td>
+                <td>@item.Physician?.Name</td>
                 <td>@item.AppointmentDateTime</td>
                 <td>@item.Reason</td>
                 <td>@item.ScheduleStatus</td>
+
+                <!-- ✅ CHAT BUTTON -->
+                <td>
+                    <a asp-controller="Chat"
+                           asp-action="Index"
+                           asp-route-receiverId="@item.Physician.PhysicianId"
+                           class="btn btn-primary btn-sm">
+                        Chat
+                    </a>
+                </td>
             </tr>
         }
     </tbody>

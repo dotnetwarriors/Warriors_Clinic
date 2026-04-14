@@ -1,40 +1,59 @@
 ﻿@{
-    ViewData["Title"] = "Dashboard";
     Layout = "~/Views/Shared/_ChemistLayout.cshtml";
 }
 
-<div class="text-center mb-5">
-    <h2 class="fw-bold">Chemist Dashboard</h2>
-    <p class="text-muted">Manage drugs, requests and purchase orders efficiently</p>
-</div>
+<style>
+    .hover-card {
+        transition: all 0.3s ease;
+    }
 
-<div class="row g-4">
+        .hover-card:hover {
+            transform: scale(1.07);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+        }
+</style>
 
-    <!-- Drug Requests -->
-    <div class="col-md-4">
-        <div class="card shadow card-hover text-center p-4">
-            <h4 class="mb-3">💊 Drug Requests</h4>
-            <p>View requests from physicians</p>
-            <a href="/Chemist/DrugRequests" class="btn btn-primary">View Requests</a>
+<div class="container-fluid">
+
+    <h2 class="mb-4 fw-bold">
+        Welcome, @Context.Session.GetString("UserName") 👋
+    </h2>
+
+    <div class="row g-4">
+
+        <!-- DRUG REQUESTS -->
+        <div class="col-md-4">
+            <a asp-action="DrugRequests" class="text-decoration-none">
+                <div class="card shadow-sm text-center p-4 border-0 h-100 hover-card">
+                    <i class="bi bi-capsule display-5 text-primary mb-3"></i>
+                    <h5 class="fw-semibold">Drug Requests</h5>
+                    <p class="text-muted small">View physician requests</p>
+                </div>
+            </a>
         </div>
-    </div>
 
-    <!-- Manage Drugs -->
-    <div class="col-md-4">
-        <div class="card shadow card-hover text-center p-4">
-            <h4 class="mb-3">📦 Manage Drugs</h4>
-            <p>Add, edit, and delete drugs</p>
-            <a href="/Drug" class="btn btn-success">Manage Drugs</a>
+        <!-- MANAGE DRUGS -->
+        <div class="col-md-4">
+            <a asp-controller="Drug" asp-action="Index" class="text-decoration-none">
+                <div class="card shadow-sm text-center p-4 border-0 h-100 hover-card">
+                    <i class="bi bi-box display-5 text-success mb-3"></i>
+                    <h5 class="fw-semibold">Manage Drugs</h5>
+                    <p class="text-muted small">Add / Edit medicines</p>
+                </div>
+            </a>
         </div>
-    </div>
 
-    <!-- Purchase Order -->
-    <div class="col-md-4">
-        <div class="card shadow card-hover text-center p-4">
-            <h4 class="mb-3">🧾 Purchase Order</h4>
-            <p>Create orders for suppliers</p>
-            <a href="/Chemist/POHome" class="btn btn-warning">Create PO</a>
+        <!-- PURCHASE ORDER -->
+        <div class="col-md-4">
+            <a asp-action="POList" class="text-decoration-none">
+                <div class="card shadow-sm text-center p-4 border-0 h-100 hover-card">
+                    <i class="bi bi-receipt display-5 text-warning mb-3"></i>
+                    <h5 class="fw-semibold">Purchase Orders</h5>
+                    <p class="text-muted small">Manage supplier orders</p>
+                </div>
+            </a>
         </div>
+
     </div>
 
 </div>

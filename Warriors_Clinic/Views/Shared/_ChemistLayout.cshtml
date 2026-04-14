@@ -1,54 +1,96 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title - Chemist Panel</title>
+    <meta charset="utf-8" />
+    <title>Chemist Panel</title>
 
-    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-
-    <style>
-            body {
-                background-color: #f4f6f9;
-            }
-
-            .navbar-brand {
-                font-weight: bold;
-            }
-
-            .main-container {
-                margin-top: 40px;
-            }
-
-            .card-hover:hover {
-                transform: translateY(-5px);
-                transition: 0.3s;
-            }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 
-<body>
+<body class="bg-light">
 
-    <!-- 🔵 NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary px-4">
-        <a class="navbar-brand" href="#">🏥 Warriors Clinic</a>
+    @{
+        var current = Context.Request.Path.Value.ToLower();
+    }
 
-        <div class="ms-auto">
-            <span class="text-white me-3">
-                Welcome, @Context.Session.GetString("UserName")
-            </span>
+    <div class="d-flex">
 
-            <a class="btn btn-light me-2" href="/Chemist/Dashboard">Dashboard</a>
-            <a class="btn btn-light me-2" href="/Chemist/DrugRequests">Drug Requests</a>
-            <a class="btn btn-light me-2" href="/Drug">Manage Drugs</a>
-            <a class="btn btn-danger" href="/Account/Logout">Logout</a>
+        <!-- 🔵 SIDEBAR -->
+        <div class="bg-dark text-white p-3 position-fixed"
+             style="width:250px; top:70px; bottom:0;">
+
+            <h4 class="text-center mb-4">💊 Chemist</h4>
+
+            <ul class="nav flex-column">
+
+
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white @(current == "/chemist/dashboard" ? "bg-primary rounded" : "")"
+                           asp-controller="Chemist" asp-action="Dashboard">
+                        <i class="bi bi-speedometer2"></i> Dashboard
+                    </a>
+                </li>
+
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white @(current.Contains("/chemist/drugrequests") ? "bg-primary rounded" : "")"
+                           asp-controller="Chemist" asp-action="DrugRequests">
+                        <i class="bi bi-capsule"></i> Drug Requests
+                    </a>
+                </li>
+
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white @(current.Contains("/drug") && !current.Contains("drugrequests") ? "bg-primary rounded" : "")"
+                           asp-controller="Drug" asp-action="Index">
+                        <i class="bi bi-box"></i> Manage Drugs
+                    </a>
+                </li>
+
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white @(current.Contains("po") ? "bg-primary rounded" : "")"
+                           asp-controller="Chemist" asp-action="POList">
+                        <i class="bi bi-receipt"></i> Purchase Orders
+                    </a>
+                </li>
+
+            </ul>
         </div>
-    </nav>
 
-    <!-- 🔷 MAIN CONTENT -->
-    <div class="container main-container">
-        @RenderBody()
+        <!-- 🔷 MAIN -->
+        <div class="flex-grow-1 d-flex flex-column"
+             style="margin-left:250px; margin-top:70px; min-height:100vh;">
+
+
+            <!-- 🔷 TOP BAR -->
+            <nav class="navbar navbar-light bg-white shadow-sm px-4 d-flex justify-content-between fixed-top"
+                 style="height:70px;">
+
+                <span class="navbar-brand mb-0 h5">Chemist Dashboard</span>
+
+                <div class="d-flex align-items-center gap-3">
+                    <span class="fw-semibold">
+                        👤 @Context.Session.GetString("UserName")
+                    </span>
+
+                    <a asp-controller="Account" asp-action="Logout" class="btn btn-outline-danger btn-sm">
+                        <i class="bi bi-box-arrow-right"></i> Logout
+                    </a>
+                </div>
+
+            </nav>
+
+            <!-- 🔷 CONTENT -->
+            <div class="p-4 flex-grow-1">
+                @RenderBody()
+            </div>
+
+        </div>
+
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    @RenderSection("Scripts", required: false)
+    @await Html.PartialAsync("_Footer")
 </body>
 </html>

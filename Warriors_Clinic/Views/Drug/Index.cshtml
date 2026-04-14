@@ -1,26 +1,59 @@
 ﻿@model IEnumerable<Warriors_Clinic.Models.Drug>
 
 @{
-    Layout = "~/Views/Shared/_ChemistLayout.cshtml";
+    var role = Context.Session.GetString("UserRole");
+
+    if (role == "Chemist")
+    {
+        Layout = "~/Views/Shared/_ChemistLayout.cshtml";
+    }
+    else if (role == "Admin")
+    {
+        Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else if (role == "Physician")
+    {
+        Layout = "~/Views/Shared/_PhysicianLayout.cshtml";
+    }
+    else if (role == "Patient")
+    {
+        Layout = "~/Views/Shared/_PatientLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml"; // Guest
+    }
 }
+
+
 
 <div class="card shadow-lg">
 
     <div class="card-header bg-primary text-white d-flex justify-content-between">
         <h4 class="mb-0">💊 Drug Management</h4>
-        <a href="/Drug/Create" class="btn btn-light">+ Add Drug</a>
+        @if (role == "Chemist")
+        {
+            <a href="/Drug/Create" class="btn btn-light">+ Add Drug</a>
+        }
     </div>
 
     <div class="card-body">
 
         <table class="table table-hover align-middle text-center">
-            <thead class="table-light">
+            <thead class="table-dark">
                 <tr>
                     <th>Title</th>
                     <th>Description</th>
                     <th>Expiry</th>
                     <th>Dosage</th>
-                    <th style="width:200px;">Actions</th>
+                    @if (role == "Chemist")
+                    {
+                        <th style="width:200px;">Actions</th>
+                    }
+                    else
+                    {
+                        <th>View</th>
+                    }
                 </tr>
             </thead>
 
@@ -34,9 +67,15 @@
                         <td>@item.Dosage</td>
 
                         <td>
-                            <a href="/Drug/Edit/@item.DrugId" class="btn btn-sm btn-warning">Edit</a>
-                            <a href="/Drug/Details/@item.DrugId" class="btn btn-sm btn-info">View</a>
-                            <a href="/Drug/Delete/@item.DrugId" class="btn btn-sm btn-danger">Delete</a>
+                           
+                            <a asp-action="Details" asp-route-id="@item.DrugId" class="btn btn-sm btn-info">View</a>
+
+                            @if (role == "Chemist")
+                            {
+                                <a asp-action="Edit" asp-route-id="@item.DrugId" class="btn btn-sm btn-warning">Edit</a>
+                                <a asp-action="Delete" asp-route-id="@item.DrugId" class="btn btn-sm btn-danger">Delete</a>
+                            }
+
                         </td>
                     </tr>
                 }
