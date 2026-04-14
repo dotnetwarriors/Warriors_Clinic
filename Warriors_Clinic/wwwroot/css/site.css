@@ -7,19 +7,17 @@ body {
 /* 🔥 HERO SECTION */
 .hero-section {
     height: 100vh;
+    width: 100%;
     display: flex;
     align-items: center;
-    background-image: linear-gradient(to right, rgba(0,0,0,0.7), rgba(0,0,0,0.2)), url('/images/hospital.jpg');
+ 
+    background: linear-gradient(to right, rgba(0,0,0,0.7), rgba(0,0,0,0.2)),
+                url('/images/hospital.jpg');
+ 
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
 }
-
-    .hero-section h1,
-    .hero-section p {
-        color: white;
-    }
-
 /* 🔥 BUTTON */
 .btn-primary {
     background: linear-gradient(45deg, #0d6efd, #0a58ca);
