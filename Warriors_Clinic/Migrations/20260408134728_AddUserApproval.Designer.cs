@@ -369,7 +369,7 @@ namespace Warriors_Clinic.Migrations
                     b.Property<int>("Poid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("POId");
+                        .HasColumnName("Poid");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Poid"));
 
@@ -409,7 +409,7 @@ namespace Warriors_Clinic.Migrations
 
                     b.Property<int?>("Poid")
                         .HasColumnType("int")
-                        .HasColumnName("POId");
+                        .HasColumnName("Poid");
 
                     b.Property<int?>("Quantity")
                         .HasColumnType("int");
@@ -616,7 +616,7 @@ namespace Warriors_Clinic.Migrations
                     b.HasOne("Warriors_Clinic.Models.PurchaseOrderHeader", "Po")
                         .WithMany("PurchaseOrderLines")
                         .HasForeignKey("Poid")
-                        .HasConstraintName("FK__PurchaseOr__POId__6D0D32F4");
+                        .HasConstraintName("FK__PurchaseOr__Poid__6D0D32F4");
 
                     b.Navigation("Drug");
 

@@ -23,7 +23,7 @@ namespace Warriors_Clinic.Controllers
         // 🔹 VIEW DRUG REQUESTS
         public IActionResult DrugRequests()
         {
-            var userName = HttpContext.Session.GetString("UserName");
+            var userName = HttpContext.Session.GetString("UserEmail");
 
             var user = _context.Users
                 .FirstOrDefault(u => u.UserName == userName);

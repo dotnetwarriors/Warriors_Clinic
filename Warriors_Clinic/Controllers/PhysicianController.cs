@@ -24,7 +24,7 @@ namespace Warriors_Clinic.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            var email = HttpContext.Session.GetString("UserName");
+            var email = HttpContext.Session.GetString("UserEmail");
 
             var physician = _context.Physicians
                 .FirstOrDefault(p => p.Email == email);
@@ -36,7 +36,7 @@ namespace Warriors_Clinic.Controllers
 
         public IActionResult Appointments()
         {
-            var email = HttpContext.Session.GetString("UserName");
+            var email = HttpContext.Session.GetString("UserEmail");
 
             var physician = _context.Physicians
                 .FirstOrDefault(p => p.Email == email);
@@ -255,7 +255,7 @@ namespace Warriors_Clinic.Controllers
 
         public IActionResult DrugRequests()
         {
-            var userName = HttpContext.Session.GetString("UserName");
+            var userName = HttpContext.Session.GetString("UserEmail");
 
             var physician = _context.Users
                 .FirstOrDefault(u => u.UserName == userName);
@@ -279,7 +279,7 @@ namespace Warriors_Clinic.Controllers
         [HttpPost]
         public IActionResult CreateDrugRequest(string DrugInfoText, int ChemistId)
         {
-            var userName = HttpContext.Session.GetString("UserName");
+            var userName = HttpContext.Session.GetString("UserEmail");
 
             var physician = _context.Users
                 .FirstOrDefault(u => u.UserName == userName);

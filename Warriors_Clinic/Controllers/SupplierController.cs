@@ -13,12 +13,33 @@ namespace Warriors_Clinic.Controllers
             _context = context;
         }
 
+        // ================= DASHBOARD =================
         public IActionResult Dashboard()
         {
-            var totalPO = _context.PurchaseOrderHeaders.Count();
-            var pending = _context.PurchaseOrderHeaders.Count(p => p.Status == "Pending");
-            var approved = _context.PurchaseOrderHeaders.Count(p => p.Status == "Approved");
-            var rejected = _context.PurchaseOrderHeaders.Count(p => p.Status == "Rejected");
+            var userEmail = HttpContext.Session.GetString("UserEmail");
+
+            var supplier = _context.Users
+                .FirstOrDefault(u => u.Email == userEmail);
+
+            if (supplier == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var supplierId = supplier.ReferenceToId;
+
+            // ✅ FILTERED COUNTS  
+            var totalPO = _context.PurchaseOrderHeaders
+                .Count(p => p.SupplierId == supplierId && p.IsVisible == true);
+
+            var pending = _context.PurchaseOrderHeaders
+                .Count(p => p.SupplierId == supplierId && p.Status == "Pending" && p.IsVisible == true);
+
+            var approved = _context.PurchaseOrderHeaders
+                .Count(p => p.SupplierId == supplierId && p.Status == "Approved" && p.IsVisible == true);
+
+            var rejected = _context.PurchaseOrderHeaders
+                .Count(p => p.SupplierId == supplierId && p.Status == "Rejected" && p.IsVisible == true);
 
             ViewBag.TotalPO = totalPO;
             ViewBag.Pending = pending;
@@ -26,31 +47,42 @@ namespace Warriors_Clinic.Controllers
             ViewBag.Rejected = rejected;
 
             return View();
+
         }
 
-        // VIEW ALL PURCHASE ORDERS
+
+        // ================= VIEW PENDING PURCHASE ORDERS =================
         public IActionResult ViewPO()
         {
-            var userName = HttpContext.Session.GetString("UserName");
+            var email = HttpContext.Session.GetString("UserEmail");
+
+            if (string.IsNullOrEmpty(email))
+                return RedirectToAction("Login", "Account");
 
             var supplier = _context.Users
-                .FirstOrDefault(u => u.UserName == userName);
+                .FirstOrDefault(u => u.Email == email);
+
+            if (supplier == null)
+                return RedirectToAction("Login", "Account");
 
             var pos = _context.PurchaseOrderHeaders
                 .Include(p => p.PurchaseOrderLines)
                     .ThenInclude(l => l.Drug)
                 .Include(p => p.Supplier)
-                .Where(p => p.SupplierId == supplier.ReferenceToId) // ✅ IMPORTANT
+                .Where(p =>
+                    p.SupplierId == supplier.ReferenceToId &&
+                    p.IsVisible == true &&
+                    p.Status == "Pending"   // 🔥 VERY IMPORTANT FIX
+                )
+                .OrderByDescending(p => p.Podate)
                 .ToList();
 
             return View(pos);
         }
 
-
-        // ACCEPT PO
         public IActionResult ApprovePO(int id)
         {
-            var po = _context.PurchaseOrderHeaders.Find(id);
+            var po = _context.PurchaseOrderHeaders.FirstOrDefault(p => p.Poid == id);
 
             if (po != null)
             {
@@ -61,10 +93,9 @@ namespace Warriors_Clinic.Controllers
             return RedirectToAction("ViewPO");
         }
 
-        // REJECT PO
         public IActionResult RejectPO(int id)
         {
-            var po = _context.PurchaseOrderHeaders.Find(id);
+            var po = _context.PurchaseOrderHeaders.FirstOrDefault(p => p.Poid == id);
 
             if (po != null)
             {
@@ -73,6 +104,73 @@ namespace Warriors_Clinic.Controllers
             }
 
             return RedirectToAction("ViewPO");
+        }
+
+
+        // ================= ACCEPTED ORDERS =================
+        public IActionResult AcceptedOrders()
+        {
+            var email = HttpContext.Session.GetString("UserEmail");
+
+            if (string.IsNullOrEmpty(email))
+                return RedirectToAction("Login", "Account");
+
+            var supplier = _context.Users
+                .FirstOrDefault(u => u.Email == email);
+
+            if (supplier == null)
+                return RedirectToAction("Login", "Account");
+
+            var orders = _context.PurchaseOrderHeaders
+                .Include(p => p.PurchaseOrderLines)
+                    .ThenInclude(l => l.Drug)
+               
+                .Where(p => p.SupplierId == supplier.ReferenceToId &&
+                            p.Status == "Approved" &&
+                            p.IsVisible == true)
+                .ToList();
+
+            return View(orders);
+        }
+
+        // ================= REJECTED ORDERS =================
+        public IActionResult RejectedOrders()
+        {
+            var email = HttpContext.Session.GetString("UserEmail");
+
+            if (string.IsNullOrEmpty(email))
+                return RedirectToAction("Login", "Account");
+
+            var supplier = _context.Users
+                .FirstOrDefault(u => u.Email == email);
+
+            if (supplier == null)
+                return RedirectToAction("Login", "Account");
+
+            var orders = _context.PurchaseOrderHeaders
+                .Include(p => p.PurchaseOrderLines)
+                    .ThenInclude(l => l.Drug)
+               
+                .Where(p => p.SupplierId == supplier.ReferenceToId &&
+                            p.Status == "Rejected" &&
+                            p.IsVisible == true)
+                .ToList();
+
+            return View(orders);
+        }
+
+        // ================= HIDE (UI DELETE ONLY) =================
+        public IActionResult Hide(int id)
+        {
+            var po = _context.PurchaseOrderHeaders.Find(id);
+
+            if (po != null)
+            {
+                po.IsVisible = false;
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("AcceptedOrders");
         }
     }
 }
