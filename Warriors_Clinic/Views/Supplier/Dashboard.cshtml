@@ -15,6 +15,7 @@
     <!-- 🔷 STATS CARDS -->
     <div class="row g-4 text-center">
 
+        <!-- TOTAL -->
         <div class="col-md-3">
             <div class="card shadow border-0 bg-primary text-white dashboard-card">
                 <div class="card-body">
@@ -24,71 +25,41 @@
             </div>
         </div>
 
+        <!-- PENDING (NO LINK) -->
         <div class="col-md-3">
-            <a asp-action="ViewPO" class="text-decoration-none">
-                <div class="card shadow border-0 bg-warning text-dark dashboard-card">
-                    <div class="card-body">
-                        <h6>Pending</h6>
-                        <h2>@ViewBag.Pending</h2>
-                    </div>
+            <div class="card shadow border-0 bg-warning text-dark dashboard-card">
+                <div class="card-body">
+                    <h6>Pending</h6>
+                    <h2>@ViewBag.Pending</h2>
                 </div>
-            </a>
+            </div>
         </div>
 
+        <!-- APPROVED (NO LINK) -->
         <div class="col-md-3">
-            <a asp-action="AcceptedOrders" class="text-decoration-none">
-                <div class="card shadow border-0 bg-success text-white dashboard-card">
-                    <div class="card-body">
-                        <h6>Approved</h6>
-                        <h2>@ViewBag.Approved</h2>
-                    </div>
+            <div class="card shadow border-0 bg-success text-white dashboard-card">
+                <div class="card-body">
+                    <h6>Approved</h6>
+                    <h2>@ViewBag.Approved</h2>
                 </div>
-            </a>
+            </div>
         </div>
 
+        <!-- REJECTED (NO LINK) -->
         <div class="col-md-3">
-            <a asp-action="RejectedOrders" class="text-decoration-none">
-                <div class="card shadow border-0 bg-danger text-white dashboard-card">
-                    <div class="card-body">
-                        <h6>Rejected</h6>
-                        <h2>@ViewBag.Rejected</h2>
-                    </div>
+            <div class="card shadow border-0 bg-danger text-white dashboard-card">
+                <div class="card-body">
+                    <h6>Rejected</h6>
+                    <h2>@ViewBag.Rejected</h2>
                 </div>
-            </a>
+            </div>
         </div>
 
     </div>
 
     <!-- 🔥 ACTION CARDS -->
-    <div class="row g-4 mt-4">
-
-        <!-- DRUG REQUESTS -->
-        <div class="col-md-4">
-            <a asp-action="DrugRequests"
-                   class="btn btn-light w-100 shadow-sm text-center p-4 h-100 border action-card">
-
-                <i class="bi bi-capsule display-5 text-primary mb-3"></i>
-                <h5 class="fw-semibold">Drug Requests</h5>
-                <p class="text-muted small mb-0">
-                    View physician requests
-                </p>
-
-            </a>
-        </div>
-
-        <!-- MANAGE DRUGS -->
-        <div class="col-md-4">
-            <a asp-action="Drugs"
-                   class="btn btn-light w-100 shadow-sm text-center p-4 h-100 border action-card">
-
-                <i class="bi bi-box display-5 text-success mb-3"></i>
-                <h5 class="fw-semibold">Manage Drugs</h5>
-                <p class="text-muted small mb-0">
-                    Add / edit medicines
-                </p>
-
-            </a>
-        </div>
+    <!-- 🔥 ACTION CARDS -->
+    <div class="row g-4 mt-4 justify-content-center">
 
         <!-- PURCHASE ORDERS -->
         <div class="col-md-4">
@@ -98,7 +69,35 @@
                 <i class="bi bi-receipt display-5 text-warning mb-3"></i>
                 <h5 class="fw-semibold">Purchase Orders</h5>
                 <p class="text-muted small mb-0">
-                    Manage supplier orders
+                    View all supplier orders
+                </p>
+
+            </a>
+        </div>
+
+        <!-- ACCEPTED ORDERS -->
+        <div class="col-md-4">
+            <a asp-action="AcceptedOrders"
+                   class="btn btn-light w-100 shadow-sm text-center p-4 h-100 border action-card">
+
+                <i class="bi bi-check-circle display-5 text-success mb-3"></i>
+                <h5 class="fw-semibold">Accepted Orders</h5>
+                <p class="text-muted small mb-0">
+                    View approved orders
+                </p>
+
+            </a>
+        </div>
+
+        <!-- REJECTED ORDERS -->
+        <div class="col-md-4">
+            <a asp-action="RejectedOrders"
+                   class="btn btn-light w-100 shadow-sm text-center p-4 h-100 border action-card">
+
+                <i class="bi bi-x-circle display-5 text-danger mb-3"></i>
+                <h5 class="fw-semibold">Rejected Orders</h5>
+                <p class="text-muted small mb-0">
+                    View rejected orders
                 </p>
 
             </a>
@@ -113,7 +112,7 @@
     .dashboard-card {
         border-radius: 12px;
         transition: 0.3s;
-        cursor: pointer;
+        cursor: default; /* ❗ No click cursor */
     }
 
         .dashboard-card:hover {
