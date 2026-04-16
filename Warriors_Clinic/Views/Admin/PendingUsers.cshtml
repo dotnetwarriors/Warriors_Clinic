@@ -12,7 +12,9 @@
         <tr>
             <th>Username</th>
             <th>Email</th>
-            <th class="text-center">Action</th>
+            <th>Status</th>
+            <th>Approved</th>
+            <th class="text-center">Actions</th>
         </tr>
     </thead>
 
@@ -22,10 +24,56 @@
             <tr>
                 <td>@user.UserName</td>
                 <td>@user.Email</td>
+                <td>
+                    @if (user.Status == "Active")
+                    {
+                        <span class="badge bg-success">Active</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Disabled</span>
+                    }
+                </td>
+
+                <td>
+                    @if (user.IsApproved)
+                    {
+                        <span class="badge bg-success">Approved</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-warning">Pending</span>
+                    }
+                </td>
+
                 <td class="text-center">
-                    <a href="/Admin/Approve/@user.UserId" class="btn btn-success btn-sm">
-                        Approve
-                    </a>
+
+                    @if (!user.IsApproved)
+                    {
+                        <a asp-action="Approve"
+                               asp-route-id="@user.UserId"
+                               class="btn btn-success btn-sm">
+                            Approve
+                        </a>
+                    }
+
+                    @if (user.Status == "Active")
+                    {
+                        <a asp-action="DisableUser"
+                               asp-route-id="@user.UserId"
+                               class="btn btn-danger btn-sm">
+                            Disable
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-action="EnableUser"
+                               asp-route-id="@user.UserId"
+                               class="btn btn-primary btn-sm">
+                            Enable
+                        </a>
+                    }
+
                 </td>
             </tr>
         }

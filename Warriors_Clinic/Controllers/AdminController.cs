@@ -94,10 +94,25 @@ public class AdminController : Controller
     }
     public IActionResult PhysicianList()
     {
-        var list = _context.Physicians.ToList();
-        return View(list);
+        var data = _context.Physicians
+            .Select(p => new Warriors_Clinic.Models.ViewModels.PhysicianVM
+            {
+                PhysicianId = p.PhysicianId,
+                Name = p.Name,
+                Email = p.Email,
+                Phone = p.Phone,
+                Specialization = p.Specialization,
+
+                Status = _context.Users
+                    .Where(u => u.ReferenceToId == p.PhysicianId && u.Role == "Physician")
+                    .Select(u => u.Status)
+                    .FirstOrDefault()
+            })
+            .ToList();
+
+        return View(data);
     }
- 
+
     public IActionResult EditPhysician(int id)
     {
         var data = _context.Physicians.Find(id);
@@ -128,26 +143,53 @@ public class AdminController : Controller
  
         return View(model);
     }
- 
-    public IActionResult DeletePhysician(int id)
+
+    //public IActionResult DeletePhysician(int id)
+    //{
+    //    var data = _context.Physicians.Find(id);
+
+    //    if (data != null)
+    //    {
+    //        var user = _context.Users
+    //            .FirstOrDefault(u => u.ReferenceToId == id && u.Role == "Physician");
+
+    //        if (user != null)
+    //            _context.Users.Remove(user);
+
+    //        _context.Physicians.Remove(data);
+    //        _context.SaveChanges();
+    //    }
+
+    //    return RedirectToAction("PhysicianList");
+    //}
+    public IActionResult EnablePhysician(int id)
     {
-        var data = _context.Physicians.Find(id);
- 
-        if (data != null)
+        var user = _context.Users
+            .FirstOrDefault(u => u.ReferenceToId == id && u.Role == "Physician");
+
+        if (user != null)
         {
-            var user = _context.Users
-                .FirstOrDefault(u => u.ReferenceToId == id && u.Role == "Physician");
- 
-            if (user != null)
-                _context.Users.Remove(user);
- 
-            _context.Physicians.Remove(data);
+            user.Status = "Active";
             _context.SaveChanges();
         }
- 
+
         return RedirectToAction("PhysicianList");
     }
- 
+
+    public IActionResult DisablePhysician(int id)
+    {
+        var user = _context.Users
+            .FirstOrDefault(u => u.ReferenceToId == id && u.Role == "Physician");
+
+        if (user != null)
+        {
+            user.Status = "Disabled";
+            _context.SaveChanges();
+        }
+
+        return RedirectToAction("PhysicianList");
+    }
+
     // ================= CHEMIST =================
     public IActionResult ChemistMenu()
     {
@@ -199,9 +241,24 @@ public class AdminController : Controller
     }
     public IActionResult ChemistList()
     {
-        return View(_context.Chemists.ToList());
+        var data = _context.Chemists
+            .Select(c => new Warriors_Clinic.Models.ViewModels.ChemistVM
+            {
+                ChemistId = c.ChemistId,
+                Name = c.Name,
+                Email = c.Email,
+                Phone = c.Phone,
+
+                Status = _context.Users
+                    .Where(u => u.ReferenceToId == c.ChemistId && u.Role == "Chemist")
+                    .Select(u => u.Status)
+                    .FirstOrDefault()
+            })
+            .ToList();
+
+        return View(data);
     }
- 
+
     public IActionResult EditChemist(int id)
     {
         return View(_context.Chemists.Find(id));
@@ -230,26 +287,53 @@ public class AdminController : Controller
  
         return View(model);
     }
- 
-    public IActionResult DeleteChemist(int id)
+
+    //public IActionResult DeleteChemist(int id)
+    //{
+    //    var data = _context.Chemists.Find(id);
+
+    //    if (data != null)
+    //    {
+    //        var user = _context.Users
+    //            .FirstOrDefault(u => u.ReferenceToId == id && u.Role == "Chemist");
+
+    //        if (user != null)
+    //            _context.Users.Remove(user);
+
+    //        _context.Chemists.Remove(data);
+    //        _context.SaveChanges();
+    //    }
+
+    //    return RedirectToAction("ChemistList");
+    //}
+    public IActionResult EnableChemist(int id)
     {
-        var data = _context.Chemists.Find(id);
- 
-        if (data != null)
+        var user = _context.Users
+            .FirstOrDefault(u => u.ReferenceToId == id && u.Role == "Chemist");
+
+        if (user != null)
         {
-            var user = _context.Users
-                .FirstOrDefault(u => u.ReferenceToId == id && u.Role == "Chemist");
- 
-            if (user != null)
-                _context.Users.Remove(user);
- 
-            _context.Chemists.Remove(data);
+            user.Status = "Active";
             _context.SaveChanges();
         }
- 
+
         return RedirectToAction("ChemistList");
     }
- 
+
+    public IActionResult DisableChemist(int id)
+    {
+        var user = _context.Users
+            .FirstOrDefault(u => u.ReferenceToId == id && u.Role == "Chemist");
+
+        if (user != null)
+        {
+            user.Status = "Disabled";
+            _context.SaveChanges();
+        }
+
+        return RedirectToAction("ChemistList");
+    }
+
     // ================= SUPPLIER =================
     public IActionResult SupplierMenu()
     {
@@ -299,12 +383,27 @@ public class AdminController : Controller
  
         return View(model);
     }
- 
+
     public IActionResult SupplierList()
     {
-        return View(_context.Suppliers.ToList());
+        var data = _context.Suppliers
+            .Select(s => new Warriors_Clinic.Models.ViewModels.SupplierVM
+            {
+                SupplierId = s.SupplierId,
+                Name = s.Name,
+                Email = s.Email,
+                Phone = s.Phone,
+
+                Status = _context.Users
+                    .Where(u => u.ReferenceToId == s.SupplierId && u.Role == "Supplier")
+                    .Select(u => u.Status)
+                    .FirstOrDefault()
+            })
+            .ToList();
+
+        return View(data);
     }
- 
+
     public IActionResult EditSupplier(int id)
     {
         return View(_context.Suppliers.Find(id));
@@ -332,25 +431,53 @@ public class AdminController : Controller
  
         return View(model);
     }
- 
-    public IActionResult DeleteSupplier(int id)
+
+    //public IActionResult DeleteSupplier(int id)
+    //{
+    //    var data = _context.Suppliers.Find(id);
+
+    //    if (data != null)
+    //    {
+    //        var user = _context.Users
+    //            .FirstOrDefault(u => u.ReferenceToId == id && u.Role == "Supplier");
+
+    //        if (user != null)
+    //            _context.Users.Remove(user);
+
+    //        _context.Suppliers.Remove(data);
+    //        _context.SaveChanges();
+    //    }
+
+    //    return RedirectToAction("SupplierList");
+    //}
+    public IActionResult EnableSupplier(int id)
     {
-        var data = _context.Suppliers.Find(id);
- 
-        if (data != null)
+        var user = _context.Users
+            .FirstOrDefault(u => u.ReferenceToId == id && u.Role == "Supplier");
+
+        if (user != null)
         {
-            var user = _context.Users
-                .FirstOrDefault(u => u.ReferenceToId == id && u.Role == "Supplier");
- 
-            if (user != null)
-                _context.Users.Remove(user);
- 
-            _context.Suppliers.Remove(data);
+            user.Status = "Active";
             _context.SaveChanges();
         }
- 
+
         return RedirectToAction("SupplierList");
     }
+
+    public IActionResult DisableSupplier(int id)
+    {
+        var user = _context.Users
+            .FirstOrDefault(u => u.ReferenceToId == id && u.Role == "Supplier");
+
+        if (user != null)
+        {
+            user.Status = "Disabled";
+            _context.SaveChanges();
+        }
+
+        return RedirectToAction("SupplierList");
+    }
+
 
     //================== SHOW CREDENTIALS =============
     public IActionResult ShowCredentials()

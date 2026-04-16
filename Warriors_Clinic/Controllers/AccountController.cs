@@ -27,6 +27,7 @@ namespace Warriors_Clinic.Controllers
         {
             user.Role = "Patient";
             user.IsApproved = false;
+            user.Status = "Active";
 
             var patient = new Patient
             {
@@ -59,6 +60,7 @@ namespace Warriors_Clinic.Controllers
         }
 
         // ✅ LOGIN (POST)
+        
         [HttpPost]
         [HttpPost]
         public IActionResult Login(string username, string password)
@@ -68,11 +70,26 @@ namespace Warriors_Clinic.Controllers
 
             if (user != null)
             {
-                // ✅ STORE SESSION CORRECTLY
+                // ❌ NOT APPROVED
+                if (user.IsApproved == false)
+                {
+                    ViewBag.Error = "Wait for admin approval";
+                    return View();
+                }
+
+                // ❌ DISABLED
+                if (user.Status != "Active")
+                {
+                    ViewBag.Error = "Your account is disabled";
+                    return View();
+                }
+
+                // ✅ LOGIN SUCCESS
+                HttpContext.Session.SetString("UserName", user.UserName);
                 HttpContext.Session.SetString("UserEmail", user.Email);
                 HttpContext.Session.SetString("UserRole", user.Role);
 
-                // ✅ PATIENT MAPPING
+                // ✅ PATIENT
                 if (user.Role == "Patient")
                 {
                     var patient = _context.Patients
@@ -107,10 +124,10 @@ namespace Warriors_Clinic.Controllers
                 }
             }
 
-            ViewBag.Error = "Invalid login";
+            // ❌ INVALID
+            ViewBag.Error = "Invalid username or password";
             return View();
         }
-
 
         // ✅ LOGOUT
         public IActionResult Logout()

@@ -29,6 +29,7 @@ public partial class User
 
     public bool IsApproved { get; set; } = false;
 
+    public string Status { get; set; } = "Active";
 
     [StringLength(100)]
     public string? Email { get; set; }
