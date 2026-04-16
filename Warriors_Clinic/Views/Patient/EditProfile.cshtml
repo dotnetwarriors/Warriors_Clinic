@@ -3,30 +3,65 @@
 @{
     Layout = "~/Views/Shared/_PatientLayout.cshtml";
 }
-<form method="post">
- 
+<div class="w-100 d-flex justify-content-start mb-3">
+    
+    <button onclick="document.referrer ? history.back() : location.href='/Admin/Dashboard'"
+            class="btn btn-light shadow rounded-circle p-2">
+        🡨
+    </button>
+
+</div>
+
+<form method="post" asp-action="Edit">
+
     <input type="hidden" asp-for="PatientId" />
- 
+
     <div class="mb-3">
         <label>Name</label>
         <input asp-for="Name" class="form-control" />
     </div>
- 
+
     <div class="mb-3">
         <label>Email</label>
         <input asp-for="Email" class="form-control" />
     </div>
- 
+
     <div class="mb-3">
         <label>Phone</label>
         <input asp-for="Phone" class="form-control" />
     </div>
- 
+
     <div class="mb-3">
         <label>Address</label>
         <input asp-for="Address" class="form-control" />
     </div>
- 
+
+    <div class="mb-3">
+        <label>Password</label>
+
+        <div class="input-group">
+            <input type="password" id="passwordField" name="NewPassword"
+                   class="form-control"
+                   placeholder="Enter new password" />
+
+            <button type="button" class="btn btn-outline-secondary" onclick="togglePassword()">
+                👁
+            </button>
+        </div>
+    </div>
+
     <button class="btn btn-success">Save</button>
- 
+
 </form>
+
+<script>
+    function togglePassword() {
+        var field = document.getElementById("passwordField");
+
+        if (field.type === "password") {
+            field.type = "text";
+        } else {
+            field.type = "password";
+        }
+    }
+</script>

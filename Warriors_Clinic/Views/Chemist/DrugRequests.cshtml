@@ -17,8 +17,7 @@
                     <th>Physician</th>
                     <th>Request</th>
                     <th>Date</th>
-                    <th>Status</th>
-                    <th>Action</th>
+                    <th>Response</th> <!-- ✅ ONLY ONE COLUMN -->
                 </tr>
             </thead>
 
@@ -28,35 +27,60 @@
                     foreach (var item in Model)
                     {
                         <tr>
-                            <td>@(item.Physician != null? item.Physician.Name : "N/A")</td>
+
+                            <!-- Physician -->
+                            <td>
+                                @(item.Physician != null ? item.Physician.Name : "N/A")
+                            </td>
+
+                            <!-- Request -->
                             <td>
                                 @(string.IsNullOrEmpty(item.DrugInfoText) ? "No Drug Info" : item.DrugInfoText)
                             </td>
-                            <td>@item.RequestDate?.ToString("dd MMM yyyy")</td>
-                            <td>@item.RequestStatus</td>
+
+                            <!-- Date -->
                             <td>
-                                @if (item.RequestStatus == "Pending")
+                                @item.RequestDate?.ToString("dd MMM yyyy")
+                            </td>
+
+                            <!-- 🔥 COMBINED RESPONSE COLUMN -->
+                            <td>
+                                @if (string.IsNullOrEmpty(item.ChemistNote))
                                 {
-                                    <a asp-action="ApproveRequest" asp-route-id="@item.DrugRequestId" class="btn btn-success btn-sm">Accept</a>
-                                    <a asp-action="RejectRequest" asp-route-id="@item.DrugRequestId" class="btn btn-danger btn-sm">Reject</a>
+                                    <form asp-action="AddChemistNote" method="post" class="d-flex gap-2">
+
+                                        <input type="hidden" name="id" value="@item.DrugRequestId" />
+
+                                        <select name="note" class="form-select form-select-sm w-auto" required>
+                                            <option value="">-- Select --</option>
+                                            <option>Noted</option>
+                                        </select>
+
+                                        <button class="btn btn-primary btn-sm">
+                                            Send
+                                        </button>
+
+                                    </form>
                                 }
                                 else
                                 {
-                                    <span class="badge bg-success">@item.RequestStatus</span>
+                                    <span class="badge bg-success px-3 py-2">
+                                        ✔ @item.ChemistNote
+                                    </span>
                                 }
                             </td>
+
                         </tr>
                     }
                 }
                 else
                 {
                     <tr>
-                        <td colspan="5" class="text-center text-danger fw-bold">
+                        <td colspan="4" class="text-center text-danger fw-bold">
                             No drug requests available
                         </td>
                     </tr>
                 }
- 
             </tbody>
         </table>
 

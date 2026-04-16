@@ -3,7 +3,14 @@
 @{
     Layout = "~/Views/Shared/_PatientLayout.cshtml";
 }
- 
+<div class="w-100 d-flex justify-content-start mb-3">
+    
+    <button onclick="document.referrer ? history.back() : location.href='/Admin/Dashboard'"
+            class="btn btn-light shadow rounded-circle p-2">
+        🡨
+    </button>
+
+</div>
 <h2>My Prescriptions</h2>
  
 <table class="table table-bordered">
@@ -13,7 +20,7 @@
             <th>Drug</th>
             <th>Dosage</th>
             <th>Timing</th>
-            <th>Duration</th>
+ 
         </tr>
     </thead>
  
@@ -38,7 +45,7 @@
                         <td>@prescriptions[i].Drug?.Tittle</td>
                         <td>@prescriptions[i].Dosage</td>
                         <td>@prescriptions[i].Timing</td>
-                        <td>@prescriptions[i].Duration</td>
+
                     </tr>
                 }
             }

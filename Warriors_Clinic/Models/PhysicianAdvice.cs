@@ -14,7 +14,7 @@ public partial class PhysicianAdvice
 
    
     [Column(TypeName = "text")]
-    public string Advice { get; set; }
+    public string? Advice { get; set; }
 
     
     public int PatientId {  get; set; }

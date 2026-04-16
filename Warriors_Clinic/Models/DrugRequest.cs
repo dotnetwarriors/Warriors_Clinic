@@ -26,6 +26,7 @@ public partial class DrugRequest
 
     public bool IsDeletedByPhysician { get; set; } = false;
 
+    public string? ChemistNote { get; set; }
     public int? ChemistId {  get; set; }
     public Chemist? Chemist { get; set; }
 

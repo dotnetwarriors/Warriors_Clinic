@@ -1,69 +1,62 @@
 ﻿@model List<Warriors_Clinic.Models.DrugRequest>
- 
+
 @{
     Layout = "~/Views/Shared/_PhysicianLayout.cshtml";
 }
 
-<h2 class="mb-3">Drug Request</h2>
- 
+<h2 class="mb-3 fw-bold">Drug Requests</h2>
+
 <!-- ✅ BUTTON -->
 <button class="btn btn-primary mb-3" onclick="toggleForm()">
     + New Request
 </button>
- 
+
 <!-- ✅ TABLE -->
-<table class="table table-bordered table-hover">
+<table class="table table-bordered table-hover shadow-sm align-middle">
+
     <thead class="table-dark">
         <tr>
             <th>Drug</th>
             <th>Chemist</th>
             <th>Date</th>
-            <th>Status</th>
-            <th>Action</th>
+            <th>Response</th> <!-- 🔥 RENAMED -->
         </tr>
     </thead>
- 
+
     <tbody>
         @if (Model != null && Model.Count > 0)
         {
             foreach (var item in Model)
             {
                 <tr>
+
+                    <!-- Drug -->
                     <td>
                         @(string.IsNullOrEmpty(item.DrugInfoText) ? "No Drug Info" : item.DrugInfoText)
                     </td>
 
+                    <!-- Chemist -->
                     <td>@item.Chemist?.Name</td>
- 
+
+                    <!-- Date -->
                     <td>
-                        @item.RequestDate?.ToString("dd-MM-yyyy HH:mm")
+                        @item.RequestDate?.ToString("dd MMM yyyy, hh:mm tt")
                     </td>
- 
+
+                    <!-- 🔷 RESPONSE -->
                     <td>
-                        @if (item.RequestStatus == "Approved")
+                        @if (!string.IsNullOrEmpty(item.ChemistNote))
                         {
-                            <span class="badge bg-success">Approved</span>
-                        }
-                        else if (item.RequestStatus == "Rejected")
-                        {
-                            <span class="badge bg-danger">Rejected</span>
+                            <span class="badge bg-success px-3 py-2">
+                                ✔ @item.ChemistNote
+                            </span>
                         }
                         else
                         {
-                            <span class="badge bg-warning text-dark">Pending</span>
+                            <span class="text-muted">Waiting for response...</span>
                         }
                     </td>
- 
-                    <td>
-                        @if (item.RequestStatus == "Approved")
-                        {
-                            <a asp-action="DeleteRequest"
-                                   asp-route-id="@item.DrugRequestId"
-                                   class="btn btn-danger btn-sm">
-                                Delete
-                            </a>
-                        }
-                    </td>
+
                 </tr>
             }
         }
@@ -77,15 +70,15 @@
         }
     </tbody>
 </table>
- 
-<!-- ✅ HIDDEN FORM (BELOW TABLE) -->
+
+<!-- ✅ FORM -->
 <div id="requestForm" style="display:none; margin-top:20px;">
     <div class="card p-3 shadow-sm">
         <h5>New Drug Request</h5>
- 
+
         <form asp-action="CreateDrugRequest" method="post">
- 
-            <!-- ✅ Select Chemist -->
+
+            <!-- Chemist -->
             <div class="mb-3">
                 <label>Select Chemist</label>
                 <select name="ChemistId" class="form-control" required>
@@ -98,27 +91,34 @@
                     }
                 </select>
             </div>
- 
-            <!-- Drug Name -->
+
+            <!-- Drug -->
             <div class="mb-3">
                 <label>Drug Name</label>
                 <input type="text" name="DrugInfoText" class="form-control" required />
             </div>
- 
+
             <button type="submit" class="btn btn-success">Submit</button>
         </form>
     </div>
 </div>
- 
+
 <!-- ✅ SCRIPT -->
 <script>
     function toggleForm() {
         var form = document.getElementById("requestForm");
- 
-        if (form.style.display === "none") {
-            form.style.display = "block";
-        } else {
-            form.style.display = "none";
-        }
+        form.style.display = (form.style.display === "none") ? "block" : "none";
     }
 </script>
+
+<!-- 🔥 OPTIONAL UI POLISH -->
+<style>
+    .table td {
+        vertical-align: middle;
+    }
+
+    .badge {
+        font-size: 14px;
+        border-radius: 10px;
+    }
+</style>

@@ -71,40 +71,16 @@ namespace Warriors_Clinic.Controllers
                 .Include(p => p.Supplier)
                 .Where(p =>
                     p.SupplierId == supplier.ReferenceToId &&
-                    p.IsVisible == true &&
-                    p.Status == "Pending"   // 🔥 VERY IMPORTANT FIX
-                )
+                    p.IsVisible == true)
+                .AsEnumerable() // 🔥 Important
+                .DistinctBy(p => p.Poid) // 🔥 Remove duplicates
                 .OrderByDescending(p => p.Podate)
                 .ToList();
 
             return View(pos);
         }
 
-        public IActionResult ApprovePO(int id)
-        {
-            var po = _context.PurchaseOrderHeaders.FirstOrDefault(p => p.Poid == id);
 
-            if (po != null)
-            {
-                po.Status = "Approved";
-                _context.SaveChanges();
-            }
-
-            return RedirectToAction("ViewPO");
-        }
-
-        public IActionResult RejectPO(int id)
-        {
-            var po = _context.PurchaseOrderHeaders.FirstOrDefault(p => p.Poid == id);
-
-            if (po != null)
-            {
-                po.Status = "Rejected";
-                _context.SaveChanges();
-            }
-
-            return RedirectToAction("ViewPO");
-        }
 
 
         // ================= ACCEPTED ORDERS =================
@@ -171,6 +147,25 @@ namespace Warriors_Clinic.Controllers
             }
 
             return RedirectToAction("AcceptedOrders");
+        }
+
+
+        [HttpPost]
+        public IActionResult AddNote(int poId, string note)
+        {
+            if (string.IsNullOrEmpty(note))
+                return RedirectToAction("ViewPO");
+
+            var po = _context.PurchaseOrderHeaders
+                .FirstOrDefault(p => p.Poid == poId);
+
+            if (po != null)
+            {
+                po.SupplierNote = note;
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("ViewPO");
         }
     }
 }

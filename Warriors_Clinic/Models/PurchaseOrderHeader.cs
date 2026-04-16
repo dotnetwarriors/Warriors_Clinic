@@ -14,7 +14,7 @@ namespace Warriors_Clinic.Models
         public DateTime? Podate { get; set; }
 
         public int? SupplierId { get; set; }
-
+        public string? SupplierNote { get; set; }
         public string? Status { get; set; } = "Pending";
 
         // Navigation

@@ -4,7 +4,14 @@
     Layout = "~/Views/Shared/_PatientLayout.cshtml";
 }
 
- 
+<div class="w-100 d-flex justify-content-start mb-3">
+    
+    <button onclick="document.referrer ? history.back() : location.href='/Admin/Dashboard'"
+            class="btn btn-light shadow rounded-circle p-2">
+        🡨
+    </button>
+
+</div>
 <h2>My Profile</h2>
  
 <div class="card p-4 shadow-sm">

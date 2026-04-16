@@ -38,19 +38,7 @@
                     </a>
                 </li>
 
-                <li class="nav-item mb-2">
-                    <a class="nav-link text-white @(current.Contains("accepted") ? "bg-primary rounded" : "")"
-                           asp-controller="Supplier" asp-action="AcceptedOrders">
-                        <i class="bi bi-check-circle"></i> Accepted
-                    </a>
-                </li>
 
-                <li class="nav-item mb-2">
-                    <a class="nav-link text-white @(current.Contains("rejected") ? "bg-primary rounded" : "")"
-                           asp-controller="Supplier" asp-action="RejectedOrders">
-                        <i class="bi bi-x-circle"></i> Rejected
-                    </a>
-                </li>
 
             </ul>
         </div>

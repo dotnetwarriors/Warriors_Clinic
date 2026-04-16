@@ -35,29 +35,10 @@
             </div>
         </div>
 
-        <!-- APPROVED (NO LINK) -->
-        <div class="col-md-3">
-            <div class="card shadow border-0 bg-success text-white dashboard-card">
-                <div class="card-body">
-                    <h6>Approved</h6>
-                    <h2>@ViewBag.Approved</h2>
-                </div>
-            </div>
-        </div>
-
-        <!-- REJECTED (NO LINK) -->
-        <div class="col-md-3">
-            <div class="card shadow border-0 bg-danger text-white dashboard-card">
-                <div class="card-body">
-                    <h6>Rejected</h6>
-                    <h2>@ViewBag.Rejected</h2>
-                </div>
-            </div>
-        </div>
 
     </div>
 
-    <!-- 🔥 ACTION CARDS -->
+   
     <!-- 🔥 ACTION CARDS -->
     <div class="row g-4 mt-4 justify-content-center">
 
@@ -75,33 +56,7 @@
             </a>
         </div>
 
-        <!-- ACCEPTED ORDERS -->
-        <div class="col-md-4">
-            <a asp-action="AcceptedOrders"
-                   class="btn btn-light w-100 shadow-sm text-center p-4 h-100 border action-card">
-
-                <i class="bi bi-check-circle display-5 text-success mb-3"></i>
-                <h5 class="fw-semibold">Accepted Orders</h5>
-                <p class="text-muted small mb-0">
-                    View approved orders
-                </p>
-
-            </a>
-        </div>
-
-        <!-- REJECTED ORDERS -->
-        <div class="col-md-4">
-            <a asp-action="RejectedOrders"
-                   class="btn btn-light w-100 shadow-sm text-center p-4 h-100 border action-card">
-
-                <i class="bi bi-x-circle display-5 text-danger mb-3"></i>
-                <h5 class="fw-semibold">Rejected Orders</h5>
-                <p class="text-muted small mb-0">
-                    View rejected orders
-                </p>
-
-            </a>
-        </div>
+       
 
     </div>
 

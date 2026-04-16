@@ -176,5 +176,23 @@ namespace Warriors_Clinic.Controllers
 
             return RedirectToAction("POList");
         }
+
+        [HttpPost]
+        public IActionResult AddChemistNote(int id, string note)
+        {
+            if (string.IsNullOrEmpty(note))
+                return RedirectToAction("DrugRequests");
+
+            var req = _context.DrugRequests
+                .FirstOrDefault(x => x.DrugRequestId == id);
+
+            if (req != null)
+            {
+                req.ChemistNote = note;
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("DrugRequests");
+        }
     }
 }

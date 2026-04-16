@@ -59,8 +59,9 @@ namespace Warriors_Clinic.Controllers
                 .Where(p => p.PatientId == patient.PatientId)
                 .Include(p => p.PhysicianPrescriptions)
                     .ThenInclude(pp => pp.Drug)
+                .AsEnumerable() // 🔥 important
+                .Where(p => p.PhysicianPrescriptions != null)
                 .ToList();
-
             return View(data);
         }
 
@@ -131,21 +132,32 @@ namespace Warriors_Clinic.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditProfile(Patient model)
+        public IActionResult Edit(Patient model, string NewPassword)
         {
-            var patient = _context.Patients.Find(model.PatientId);
+            var patient = _context.Patients.FirstOrDefault(p => p.PatientId == model.PatientId);
 
-            if (patient != null)
+            if (patient == null)
+                return NotFound();
+
+            // ✅ Update patient details
+            patient.Name = model.Name;
+            patient.Email = model.Email;
+            patient.Phone = model.Phone;
+            patient.Address = model.Address;
+
+            // ✅ FIXED: Get user using session email
+            var email = HttpContext.Session.GetString("UserEmail");
+            var user = _context.Users.FirstOrDefault(u => u.Email == email);
+
+            // ✅ Update password
+            if (!string.IsNullOrEmpty(NewPassword) && user != null)
             {
-                patient.Name = model.Name;
-                patient.Phone = model.Phone;
-                patient.Address = model.Address;
-                patient.Email = model.Email;
-
-                _context.SaveChanges();
+                user.Password = NewPassword;
             }
 
-            return RedirectToAction("Profile");
+            _context.SaveChanges();
+
+            return RedirectToAction("EditProfile");
         }
     }
 }
