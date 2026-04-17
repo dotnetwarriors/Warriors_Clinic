@@ -25,9 +25,22 @@ namespace Warriors_Clinic.Controllers
         }
 
         // GET: Drugs
-        public async Task<IActionResult> Index()
+        // GET: Drugs
+        public async Task<IActionResult> Index(string search)
         {
-            return View(await _context.Drugs.ToListAsync());
+            var drugs = _context.Drugs.AsQueryable();
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                search = search.ToLower();
+
+                drugs = drugs.Where(d =>
+                    d.Tittle.ToLower().Contains(search) ||
+                    (d.Description != null && d.Description.ToLower().Contains(search))
+                );
+            }
+
+            return View(await drugs.ToListAsync());
         }
 
         // GET: Drugs/Details/5
