@@ -59,9 +59,10 @@ public class AppointmentController : Controller
 
     // ✅ POST: Appointment/Create
     [HttpPost]
-    [ValidateAntiForgeryToken]
+   
     public async Task<IActionResult> Create(Appointment appointment)
     {
+        // ✅ Get logged-in patient
         var patientId = HttpContext.Session.GetInt32("PatientId");
 
         if (patientId == null)
@@ -69,20 +70,35 @@ public class AppointmentController : Controller
             return RedirectToAction("Login", "Account");
         }
 
-        // ✅ CORRECT LINKING
+        // ✅ Assign patient automatically
         appointment.PatientId = patientId.Value;
 
+        // ❌ Remove doctor selection (Admin will assign)
+        appointment.PhysicianId = null; // make sure DB allows NULL
+
+        // ✅ Default status
         appointment.ScheduleStatus = "Pending";
 
+        // ✅ Prevent past date booking
+        if (appointment.AppointmentDateTime < DateTime.Now)
+        {
+            ModelState.AddModelError("", "Past date/time is not allowed.");
+        }
+
+        // ✅ Final save
         if (ModelState.IsValid)
         {
-            _context.Add(appointment);
+            _context.Appointments.Add(appointment);
             await _context.SaveChangesAsync();
 
             return RedirectToAction("MyAppointments");
         }
+        if (string.IsNullOrEmpty(appointment.Criticality))
+        {
+            appointment.Criticality = "Routine";
+        }
 
-        ViewData["PhysicianId"] = new SelectList(_context.Physicians, "PhysicianId", "Name", appointment.PhysicianId);
         return View(appointment);
     }
+
 }

@@ -11,16 +11,15 @@
     <form asp-action="Create" method="post">
  
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
- 
-        <div class="mb-3">
-            <label class="form-label">Select Doctor</label>
-            <select asp-for="PhysicianId" class="form-control" asp-items="ViewBag.PhysicianId"></select>
-        </div>
+
  
         <div class="mb-3">
             <label class="form-label">Appointment Date & Time</label>
-            <input asp-for="AppointmentDateTime" type="datetime-local" class="form-control" />
-        </div>
+            <input asp-for="AppointmentDateTime"
+                   type="datetime-local"
+                   class="form-control"
+                   id="appointmentDate" />
+         </div>
  
         <div class="mb-3">
             <label class="form-label">Reason</label>
@@ -29,10 +28,11 @@
  
         <div class="mb-3">
             <label class="form-label">Criticality</label>
+            <label class="form-label">Priority</label>
             <select asp-for="Criticality" class="form-control">
-                <option value="Low">Low</option>
-                <option value="Medium">Medium</option>
-                <option value="High">High</option>
+                <option value="Routine">Routine</option>
+                <option value="Urgent">Urgent</option>
+                <option value="Emergency">Emergency</option>
             </select>
         </div>
  
@@ -45,3 +45,30 @@
  
     </form>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+ 
+        let input = document.getElementById("appointmentDate");
+ 
+        let now = new Date();
+ 
+        // Format: yyyy-MM-ddTHH:mm
+        let formatted = now.toISOString().slice(0,16);
+ 
+        // ✅ Disable past date & time
+        input.min = formatted;
+ 
+        // ❌ Block typing
+        input.addEventListener("keydown", function (e) {
+            e.preventDefault();
+        });
+ 
+        // ❌ Block paste
+        input.addEventListener("paste", function (e) {
+            e.preventDefault();
+        });
+ 
+    });
+</script>
+ 
