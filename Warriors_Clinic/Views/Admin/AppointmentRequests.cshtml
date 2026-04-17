@@ -1,31 +1,29 @@
 ﻿@model IEnumerable<Warriors_Clinic.Models.Appointment>
-
+ 
 @{
     ViewData["Title"] = "Appointment Requests";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
-
+ 
 <div class="container-fluid mt-4">
-
+ 
     <div class="w-100 d-flex justify-content-start mb-3">
-    
         <button onclick="document.referrer ? history.back() : location.href='/Admin/Dashboard'"
                 class="btn btn-light shadow rounded-circle p-2">
             🡨
         </button>
-
     </div>
+ 
     <!-- HEADER -->
     <div class="text-center mb-4">
         <h2 class="fw-bold">📋 Appointment Requests</h2>
     </div>
-
+ 
     <!-- TABLE -->
     <div class="card shadow border-0">
         <div class="card-body p-0">
-
             <table class="table table-hover mb-0 align-middle">
-
+ 
                 <thead class="table-dark">
                     <tr>
                         <th>Patient</th>
@@ -36,77 +34,112 @@
                         <th class="text-center">Actions</th>
                     </tr>
                 </thead>
-
+ 
                 <tbody>
                     @foreach (var item in Model)
                     {
                         <tr>
-
-                            <!-- PATIENT -->
-                            <td class="fw-semibold">@item.Patient?.Name</td>
-
-                            <!-- DOCTOR -->
-                            <td>@item.Physician?.Name</td>
-
-                            <!-- DATE -->
-                            <td>
-                                @item.AppointmentDateTime?.ToString("dd MMM yyyy, hh:mm tt")
-                            </td>
-
-                            <!-- REASON -->
-                            <td>@item.Reason</td>
-
-                            <!-- STATUS -->
-                            <td>
-                                @if (item.ScheduleStatus?.Trim().ToLower() == "approved")
-                                {
-                                    <span class="badge bg-success">Approved</span>
-                                }
-                                else if (item.ScheduleStatus?.Trim().ToLower() == "rejected")
-                                {
-                                    <span class="badge bg-danger">Rejected</span>
-                                }
-                                else if (item.ScheduleStatus?.Trim().ToLower() == "consulted")
-                                {
-                                    <span class="badge bg-info">Consulted</span>
-                                }
-                                else
-                                {
-                                    <span class="badge bg-warning text-dark">Pending</span>
-                                }
-                            </td>
-
-                            <!-- ACTIONS -->
-                            <td class="text-center">
-                                @if (item.ScheduleStatus?.Trim().ToLower() == "pending")
-                                {
-                                    <div class="d-flex justify-content-center gap-2">
-                                        <a asp-action="ApproveAppointment"
-                                               asp-route-id="@item.AppointmentId"
-                                               class="btn btn-success btn-sm">
-                                            ✔
-                                        </a>
-
-                                        <a asp-action="RejectAppointment"
-                                               asp-route-id="@item.AppointmentId"
-                                               class="btn btn-danger btn-sm">
-                                            ✖
-                                        </a>
-                                    </div>
-                                }
-                                else
-                                {
-                                    <span class="text-muted">No actions</span>
-                                }
-                            </td>
-
+ 
+                            <!-- FORM START -->
+                            <form asp-action="ApproveAppointment" method="post">
+ 
+                                <!-- PATIENT -->
+                                <td class="fw-semibold">@item.Patient?.Name</td>
+ 
+                                <!-- 🔥 DOCTOR DROPDOWN -->
+                                <td>
+                                    @if (item.ScheduleStatus?.ToLower() == "pending")
+                                    {
+                                        <select name="physicianId" class="form-control" required>
+                                            <option value="">Select Doctor</option>
+                                            @foreach (var doc in ViewBag.Physicians)
+                                            {
+                                                <option value="@doc.PhysicianId">
+                                                    @doc.Name
+                                                </option>
+                                            }
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        @item.Physician?.Name
+                                    }
+                                </td>
+ 
+                                <!-- 🔥 EDITABLE DATE -->
+                                <td>
+                                    @if (item.ScheduleStatus?.ToLower() == "pending")
+                                    {
+                                        <input type="datetime-local"
+                                               name="appointmentDateTime"
+                                               class="form-control"
+                                               value="@item.AppointmentDateTime?.ToString("yyyy-MM-ddTHH:mm")"
+                                               required />
+                                    }
+                                    else
+                                    {
+                                        @item.AppointmentDateTime?.ToString("dd MMM yyyy, hh:mm tt")
+                                    }
+                                </td>
+ 
+                                <!-- REASON -->
+                                <td>@item.Reason</td>
+ 
+                                <!-- STATUS -->
+                                <td>
+                                    @if (item.ScheduleStatus?.Trim().ToLower() == "approved")
+                                    {
+                                        <span class="badge bg-success">Approved</span>
+                                    }
+                                    else if (item.ScheduleStatus?.Trim().ToLower() == "rejected")
+                                    {
+                                        <span class="badge bg-danger">Rejected</span>
+                                    }
+                                    else if (item.ScheduleStatus?.Trim().ToLower() == "consulted")
+                                    {
+                                        <span class="badge bg-info">Consulted</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning text-dark">Pending</span>
+                                    }
+                                </td>
+ 
+                                <!-- 🔥 ACTION -->
+                                <td class="text-center">
+                                    @if (item.ScheduleStatus?.ToLower() == "pending")
+                                    {
+                                        <input type="hidden" name="appointmentId" value="@item.AppointmentId" />
+ 
+                                        <div class="d-flex justify-content-center gap-2">
+ 
+                                            <button type="submit" class="btn btn-success btn-sm">
+                                                ✔
+                                            </button>
+ 
+                                            <a asp-action="RejectAppointment"
+                                                   asp-route-id="@item.AppointmentId"
+                                                   class="btn btn-danger btn-sm">
+                                                ✖
+                                            </a>
+ 
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">No actions</span>
+                                    }
+                                </td>
+ 
+                            </form>
+                            <!-- FORM END -->
+ 
                         </tr>
                     }
                 </tbody>
-
+ 
             </table>
-
         </div>
     </div>
-
 </div>
+ 

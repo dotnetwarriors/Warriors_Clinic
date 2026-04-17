@@ -144,24 +144,8 @@ public class AdminController : Controller
         return View(model);
     }
 
-    //public IActionResult DeletePhysician(int id)
-    //{
-    //    var data = _context.Physicians.Find(id);
-
-    //    if (data != null)
-    //    {
-    //        var user = _context.Users
-    //            .FirstOrDefault(u => u.ReferenceToId == id && u.Role == "Physician");
-
-    //        if (user != null)
-    //            _context.Users.Remove(user);
-
-    //        _context.Physicians.Remove(data);
-    //        _context.SaveChanges();
-    //    }
-
-    //    return RedirectToAction("PhysicianList");
-    //}
+    
+ 
     public IActionResult EnablePhysician(int id)
     {
         var user = _context.Users
@@ -288,24 +272,7 @@ public class AdminController : Controller
         return View(model);
     }
 
-    //public IActionResult DeleteChemist(int id)
-    //{
-    //    var data = _context.Chemists.Find(id);
-
-    //    if (data != null)
-    //    {
-    //        var user = _context.Users
-    //            .FirstOrDefault(u => u.ReferenceToId == id && u.Role == "Chemist");
-
-    //        if (user != null)
-    //            _context.Users.Remove(user);
-
-    //        _context.Chemists.Remove(data);
-    //        _context.SaveChanges();
-    //    }
-
-    //    return RedirectToAction("ChemistList");
-    //}
+    
     public IActionResult EnableChemist(int id)
     {
         var user = _context.Users
@@ -432,24 +399,7 @@ public class AdminController : Controller
         return View(model);
     }
 
-    //public IActionResult DeleteSupplier(int id)
-    //{
-    //    var data = _context.Suppliers.Find(id);
-
-    //    if (data != null)
-    //    {
-    //        var user = _context.Users
-    //            .FirstOrDefault(u => u.ReferenceToId == id && u.Role == "Supplier");
-
-    //        if (user != null)
-    //            _context.Users.Remove(user);
-
-    //        _context.Suppliers.Remove(data);
-    //        _context.SaveChanges();
-    //    }
-
-    //    return RedirectToAction("SupplierList");
-    //}
+   
     public IActionResult EnableSupplier(int id)
     {
         var user = _context.Users
@@ -484,27 +434,44 @@ public class AdminController : Controller
     {
         return View();
     }
- 
+
     // ================= APPOINTMENTS =================
+
     public IActionResult AppointmentRequests()
     {
+        // ✅ Get all appointments with related data
         var data = _context.Appointments
             .Include(a => a.Patient)
             .Include(a => a.Physician)
             .ToList();
- 
+
+        // ✅ Send ACTIVE physicians for dropdown
+        ViewBag.Physicians = _context.Physicians
+            .Where(p => p.Status == "Active")
+            .ToList();
+
         return View(data);
     }
 
-    public IActionResult ApproveAppointment(int id)
+    [HttpPost]
+    public IActionResult ApproveAppointment(int appointmentId, int physicianId, DateTime appointmentDateTime)
     {
-        var appointment = _context.Appointments.Find(id);
+        var appointment = _context.Appointments
+            .FirstOrDefault(a => a.AppointmentId == appointmentId);
 
-        if (appointment != null)
-        {
-            appointment.ScheduleStatus = "Approved";
-            _context.SaveChanges();
-        }
+        if (appointment == null)
+            return NotFound();
+
+        // ✅ Assign doctor
+        appointment.PhysicianId = physicianId;
+
+        // ✅ Update date/time
+        appointment.AppointmentDateTime = appointmentDateTime;
+
+        // ✅ Approve
+        appointment.ScheduleStatus = "Approved";
+
+        _context.SaveChanges();
 
         return RedirectToAction("AppointmentRequests");
     }
@@ -521,6 +488,7 @@ public class AdminController : Controller
 
         return RedirectToAction("AppointmentRequests");
     }
+
 
     [HttpPost]
     public IActionResult Reschedule(int id, DateTime newDate)
