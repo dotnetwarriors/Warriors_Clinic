@@ -6,70 +6,92 @@
 }
  
 <h2 class="mb-4">💊 Prescriptions</h2>
- 
-<table class="table table-bordered table-hover shadow">
-    <thead class="table-dark">
+
+<table class="table table-bordered table-hover shadow-sm align-middle">
+
+    <thead class="table-dark text-center">
         <tr>
-            <th>PatientId</th>
-            <th>Patient Name</th>
-            <th>AppointmentId</th>
-            <th>Phone</th>
-            <th>Address</th>
-            <th>Date & Time</th>
+            <th>Patient</th>
+            <th>Appointment</th>
+            <th>Contact</th>
+            <th>Date</th>
             <th>Reason</th>
             <th>Status</th>
             <th>Action</th>
         </tr>
     </thead>
- 
+
     <tbody>
         @foreach (var item in Model)
         {
             <tr>
-                <td>@item.Appointment.Patient.PatientId</td>
-                <td>@item.Appointment.Patient.Name</td>
-                <td>@item.Appointment.AppointmentId</td>
-                <td>@item.Appointment.Patient.Phone</td>
-                <td>@item.Appointment.Patient.Address</td>
- 
-                <td>@item.Appointment.AppointmentDateTime</td>
-                <td>@item.Appointment.Reason</td>
+
+                <!-- 👤 PATIENT -->
                 <td>
+                    <strong>@item.Appointment.Patient.Name</strong><br />
+                    <small class="text-muted">ID: @item.Appointment.Patient.PatientId</small>
+                </td>
+
+                <!-- 📅 APPOINTMENT -->
+                <td class="text-center">
+                    #@item.Appointment.AppointmentId
+                </td>
+
+                <!-- 📞 CONTACT -->
+                <td>
+                    <small>📞 @item.Appointment.Patient.Phone</small><br />
+                    <small class="text-muted">@item.Appointment.Patient.Address</small>
+                </td>
+
+                <!-- 🕒 DATE -->
+                <td>
+                    @(item.Appointment.AppointmentDateTime?.ToString("dd MMM yyyy"))<br />
+                    <small class="text-muted">
+                        @(item.Appointment.AppointmentDateTime?.ToString("hh:mm tt"))
+                    </small>
+                </td>
+
+                <!-- 🧾 REASON -->
+                <td>
+                    @item.Appointment.Reason
+                </td>
+
+                <!-- 📌 STATUS -->
+                <td class="text-center">
                     @if (item.ScheduleStatus == ScheduleStatusEnum.Consulted)
                     {
-                        <span class="badge bg-success">Consulted</span>
+                        <span class="badge bg-warning text-dark px-3 py-2">Pending</span>
                     }
                     else if (item.ScheduleStatus.ToString() == "Added")
                     {
-                        <span class="badge bg-primary">Prescription Added</span>
+                        <span class="badge bg-success px-3 py-2">Prescribed</span>
                     }
                 </td>
- 
-                <td>
+
+                <!-- ⚙️ ACTION -->
+                <td class="text-center">
+
                     @if (item.ScheduleStatus == ScheduleStatusEnum.Consulted)
                     {
                         <a asp-action="AddPrescription"
                                asp-controller="Physician"
                                asp-route-id="@item.ScheduleId"
                                class="btn btn-primary btn-sm">
-                            Add Prescription
+                            Add
                         </a>
                     }
                     else
                     {
-                        <button class="btn btn-secondary btn-sm" disabled>
-                            Prescription Added
-                        </button>
- 
-                        <a asp-action="DeleteFromPrescription"
+                        <a asp-action="AddPrescription"
                                asp-controller="Physician"
                                asp-route-id="@item.ScheduleId"
-                               class="btn btn-danger btn-sm">
-                            Delete
+                               class="btn btn-warning btn-sm">
+                            Edit
                         </a>
                     }
+
                 </td>
- 
+
             </tr>
         }
     </tbody>
