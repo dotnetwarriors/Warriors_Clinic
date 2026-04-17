@@ -32,6 +32,8 @@ public partial class Physician
     [Unicode(false)]
     public string Specialization { get; set; } = null!;
 
+    public string Status { get; set; } = "Active";
+
     [Column(TypeName = "text")]
     public string Summary { get; set; } = null!;
 
