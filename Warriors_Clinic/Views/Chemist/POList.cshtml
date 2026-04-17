@@ -38,13 +38,32 @@
                 <td>@po.Poid</td>
 
                 <td>@po.Supplier?.Name</td>
-
                 <td>
-                    @foreach (var line in po.PurchaseOrderLines)
+                    @{
+                        var lines = po.PurchaseOrderLines.ToList();
+                        var first = lines.FirstOrDefault();
+                    }
+
+                    <div>
+                        @first?.Drug?.Tittle (@first?.Quantity)
+                    </div>
+
+                    <div id="more_@po.Poid" style="display:none;">
+                        @foreach (var line in lines.Skip(1))
+                        {
+                            <div>
+                                @line.Drug?.Tittle (@line.Quantity)
+                            </div>
+                        }
+                    </div>
+
+                    @if (lines.Count > 1)
                     {
-                        <div>
-                            @line.Drug?.Tittle (@line.Quantity)
-                        </div>
+                        <span style="color:blue; cursor:pointer;"
+                              onclick="toggleDrugs(@po.Poid)"
+                              id="btn_@po.Poid">
+                            ... more
+                        </span>
                     }
                 </td>
 
@@ -83,5 +102,18 @@
             </tr>
         }
     </tbody>
+    <script>
+            function toggleDrugs(id) {
+                var more = document.getElementById("more_" + id);
+                var btn = document.getElementById("btn_" + id);
 
+                if (more.style.display === "none") {
+                    more.style.display = "block";
+                    btn.innerHTML = "show less";
+                } else {
+                    more.style.display = "none";
+                    btn.innerHTML = "... more";
+                }
+            }
+    </script>
 </table>

@@ -134,56 +134,88 @@ namespace Warriors_Clinic.Controllers
                 .ThenInclude(a => a.Patient)
                 .FirstOrDefault(s => s.ScheduleId == id);
 
-            if (schedule == null)
-                return NotFound();
+            if (schedule == null) return NotFound();
 
-            // ✅ IMPORTANT
-            ViewBag.AppointmentId = schedule.Appointment.AppointmentId;
+            ViewBag.AppointmentId = schedule.AppointmentId;
             ViewBag.PatientId = schedule.Appointment.PatientId;
+
+            // 🔥 GET EXISTING ADVICE USING PATIENT
+            var advice = _context.PhysicianAdvices
+                .Where(a => a.PatientId == schedule.Appointment.PatientId)
+                .OrderByDescending(a => a.PhysicianAdviceId)
+                .FirstOrDefault();
+
+            // 🔥 GET PRESCRIPTION LINES
+            var lines = advice != null
+                ? _context.PhysicianPrescriptions
+                    .Where(p => p.PhysicianAdviceId == advice.PhysicianAdviceId)
+                    .ToList()
+                : null;
+
+            ViewBag.ExistingAdvice = advice;
+            ViewBag.ExistingLines = lines;
 
             ViewBag.Drugs = _context.Drugs.ToList();
 
-            return View(schedule);
+            return View();
         }
+
         [HttpPost]
         public IActionResult AddPrescription(
-            int patientId,
-            int appointmentId, // ✅ ADD THIS (IMPORTANT)
-            string advice,
-            List<int> Drug,
-            List<string> Dosage,
-            List<string> Timing,
-            List<string> Duration)
+    int patientId,
+    int appointmentId,
+    string advice,
+    List<int> Drug,
+    List<string> Dosage,
+    List<string> Timing,
+    List<string> Duration)
         {
-            // ✅ STEP 1: Check appointment exists
             var appointment = _context.Appointments
                 .FirstOrDefault(a => a.AppointmentId == appointmentId);
 
             if (appointment == null)
-            {
                 return NotFound();
+
+            // 🔥 STEP 1: CHECK EXISTING ADVICE
+            var existingAdvice = _context.PhysicianAdvices
+                .Where(a => a.PatientId == patientId)
+                .OrderByDescending(a => a.PhysicianAdviceId)
+                .FirstOrDefault();
+
+            PhysicianAdvice adviceEntry;
+
+            if (existingAdvice != null)
+            {
+                // ✅ UPDATE
+                adviceEntry = existingAdvice;
+                adviceEntry.Advice = advice;
+
+                _context.Entry(adviceEntry).State = EntityState.Modified;
+
+                // ❌ REMOVE OLD PRESCRIPTION LINES
+                var oldLines = _context.PhysicianPrescriptions
+                    .Where(p => p.PhysicianAdviceId == adviceEntry.PhysicianAdviceId)
+                    .ToList();
+
+                _context.PhysicianPrescriptions.RemoveRange(oldLines);
+            }
+            else
+            {
+                // ✅ INSERT NEW
+                adviceEntry = new PhysicianAdvice
+                {
+                    PatientId = patientId,
+                    Advice = advice
+                };
+
+                _context.PhysicianAdvices.Add(adviceEntry);
+                _context.SaveChanges(); // 🔥 needed for ID
             }
 
-            // ✅ STEP 2: Prevent duplicate prescription
-            if (appointment.ScheduleStatus == "Added")
-            {
-                return RedirectToAction("Prescriptions");
-            }
-
-            // ✅ STEP 3: Save Advice
-            var adviceEntry = new PhysicianAdvice
-            {
-                PatientId = patientId,
-                Advice = advice
-            };
-
-            _context.PhysicianAdvices.Add(adviceEntry);
-            _context.SaveChanges(); // needed to get AdviceId
-
-            // ✅ STEP 4: Save Prescription (Multiple drugs)
+            // 🔥 STEP 2: ADD NEW LINES
             for (int i = 0; i < Drug.Count; i++)
             {
-                if (Drug[i] != 0)
+                if (Drug[i] != null && Drug[i] != 0)
                 {
                     var prescription = new PhysicianPrescription
                     {
@@ -198,28 +230,23 @@ namespace Warriors_Clinic.Controllers
                 }
             }
 
-            // ✅ STEP 5: UPDATE STATUS → MAIN REQUIREMENT
+            // 🔥 STEP 3: UPDATE STATUS
             appointment.ScheduleStatus = ScheduleStatusEnum.Added.ToString();
 
-            // ✅ ALSO UPDATE SCHEDULE TABLE (CRITICAL FIX)
             var schedule = _context.Schedule
                 .FirstOrDefault(s => s.AppointmentId == appointmentId);
 
             if (schedule != null)
             {
                 schedule.ScheduleStatus = ScheduleStatusEnum.Added;
-
-                _context.Entry(schedule).State =
-                    Microsoft.EntityFrameworkCore.EntityState.Modified;
+                _context.Entry(schedule).State = EntityState.Modified;
             }
 
-            _context.Entry(appointment).State =
-                Microsoft.EntityFrameworkCore.EntityState.Modified;
+            _context.Entry(appointment).State = EntityState.Modified;
 
-            // ✅ STEP 6: SAVE ALL
+            // 🔥 STEP 4: SAVE
             _context.SaveChanges();
 
-            // ✅ STEP 7: REDIRECT BACK
             return RedirectToAction("Prescriptions");
         }
 
@@ -236,23 +263,23 @@ namespace Warriors_Clinic.Controllers
 
             return RedirectToAction("Appointment");
         }
-        public IActionResult DeleteFromPrescription(int id)
-        {
-            var schedule = _context.Schedule
-                .Include(s => s.Appointment)
-                .FirstOrDefault(s => s.ScheduleId == id);
+        //public IActionResult DeleteFromPrescription(int id)
+        //{
+        //    var schedule = _context.Schedule
+        //        .Include(s => s.Appointment)
+        //        .FirstOrDefault(s => s.ScheduleId == id);
 
-            if (schedule != null)
-            {
-                // ✅ Hide from Prescription dashboard ONLY
-                schedule.Appointment.IsVisibleToDoctor = false;
+        //    if (schedule != null)
+        //    {
+        //        // ✅ Hide from Prescription dashboard ONLY
+        //        schedule.Appointment.IsVisibleToDoctor = false;
 
-                _context.SaveChanges();
-            }
+        //        _context.SaveChanges();
+        //    }
 
-            // ✅ Stay on SAME PAGE
-            return RedirectToAction("Prescriptions");
-        }
+        //    // ✅ Stay on SAME PAGE
+        //    return RedirectToAction("Prescriptions");
+        //}
 
         public IActionResult DrugRequests()
         {
