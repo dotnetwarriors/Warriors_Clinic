@@ -23,7 +23,7 @@ namespace Warriors_Clinic.Controllers
 
         // ✅ REGISTER
         [HttpPost]
-        public IActionResult Register(User user, string DOB, string Gender, string Address, string Phone, string Summary)
+        public IActionResult Register(User user,string Name, string DOB, string Gender, string Address, string Phone, string Summary)
         {
             user.Role = "Patient";
             user.IsApproved = false;
@@ -31,7 +31,7 @@ namespace Warriors_Clinic.Controllers
 
             var patient = new Patient
             {
-                Name = user.UserName,
+                Name =Name,
                 DOB = DateTime.Parse(DOB),
                 Gender = Gender,
                 Address = Address,
